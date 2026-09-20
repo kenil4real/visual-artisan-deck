@@ -1,5 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useState,
+  type FormEvent,
+  type ReactNode,
+  type SelectHTMLAttributes,
+} from "react";
 import {
   ArrowDown,
   ArrowRight,
@@ -304,11 +310,11 @@ function Index() {
   </main>;
 }
 
-function Field({ label, required, children, className = "" }: { label: string; required?: boolean; children: React.ReactNode; className?: string }) {
+function Field({ label, required, children, className = "" }: { label: string; required?: boolean; children: ReactNode; className?: string }) {
   return <label className={`block ${className}`}><span className="label-caps mb-3 block">{label}{required && <span className="ml-1 text-signal" aria-hidden="true">*</span>}</span>{children}</label>;
 }
 
-function NativeSelect({ options, ...props }: React.SelectHTMLAttributes<HTMLSelectElement> & { options: string[] }) {
+function NativeSelect({ options, ...props }: SelectHTMLAttributes<HTMLSelectElement> & { options: string[] }) {
   return <select {...props} defaultValue="" className="h-11 w-full appearance-none rounded-none border border-input bg-transparent px-3 text-sm focus-visible:ring-1 focus-visible:ring-ring">{options.map((option, index) => <option key={option} value={index === 0 ? "" : option} disabled={index === 0}>{option}</option>)}</select>;
 }
 

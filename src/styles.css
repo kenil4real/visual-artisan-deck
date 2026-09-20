@@ -165,9 +165,9 @@
 @keyframes drift { 50% { transform: scale(1.035); } }
 @keyframes pulse-line { 50% { transform: scaleY(.35); } }
 
-@utility editorial-display { font-family: var(--font-display); font-size: clamp(3.35rem, 8.7vw, 9.5rem); line-height: .84; letter-spacing: 0; }
-@utility section-display { font-family: var(--font-display); font-size: clamp(2.65rem, 6.2vw, 7rem); line-height: .9; letter-spacing: 0; }
-@utility label-caps { font-size: .68rem; line-height: 1; letter-spacing: .12em; text-transform: uppercase; font-weight: 700; }
+@utility editorial-display { font-family: var(--font-display); font-size: 3.35rem; line-height: .84; letter-spacing: 0; }
+@utility section-display { font-family: var(--font-display); font-size: 2.65rem; line-height: .9; letter-spacing: 0; }
+@utility label-caps { font-size: .68rem; line-height: 1; letter-spacing: 0; text-transform: uppercase; font-weight: 700; }
 @utility page-gutter { padding-left: clamp(1.25rem, 4vw, 4rem); padding-right: clamp(1.25rem, 4vw, 4rem); }
 @utility marquee-track { width: max-content; animation: marquee 28s linear infinite; }
 @utility hero-rise { animation: rise .9s cubic-bezier(.2,.7,.2,1) both; }
@@ -178,4 +178,19 @@
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+
+@media (min-width: 40rem) {
+  .editorial-display { font-size: 5rem; }
+  .section-display { font-size: 4rem; }
+}
+
+@media (min-width: 64rem) {
+  .editorial-display { font-size: 7rem; }
+  .section-display { font-size: 5.5rem; }
+}
+
+@media (min-width: 90rem) {
+  .editorial-display { font-size: 9rem; }
+  .section-display { font-size: 7rem; }
 }
