@@ -7,13 +7,8 @@ import {
   type SelectHTMLAttributes,
 } from "react";
 import {
-  ArrowDown,
   ArrowRight,
-  Check,
   Menu,
-  Paperclip,
-  Pause,
-  Play,
   Plus,
   X,
 } from "lucide-react";
@@ -27,7 +22,6 @@ import testimonialImage from "@/assets/testimonial-set.jpg";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 
 const description =
   "Professional video production, photography, drone cinematography, animation, B-roll, product videos, virtual tours, and visual storytelling for businesses and organizations.";
@@ -35,9 +29,9 @@ const description =
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Professional Video Production & Visual Content | [COMPANY NAME]" },
+      { title: "Professional Video Production & Visual Content | Kekera" },
       { name: "description", content: description },
-      { property: "og:title", content: "Professional Video Production & Visual Content | [COMPANY NAME]" },
+      { property: "og:title", content: "Professional Video Production & Visual Content | Kekera" },
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -50,11 +44,9 @@ export const Route = createFileRoute("/")({
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "ProfessionalService",
-          name: "[COMPANY NAME]",
+          name: "Kekera",
           description,
-          email: "[COMPANY EMAIL]",
-          telephone: "[PHONE NUMBER]",
-          address: { "@type": "PostalAddress", addressLocality: "[CITY / LOCATION]" },
+          email: "Divyaramani@kekerainc.com",
         }),
       },
     ],
@@ -62,7 +54,7 @@ export const Route = createFileRoute("/")({
   component: Index,
 });
 
-const navItems = ["Work", "Services", "Industries", "Process", "About", "Contact"];
+const navItems = ["Services", "Industries", "Process", "About", "Contact"];
 
 const services = [
   ["Video Production", "Professional production for brands, campaigns, events, organizations, and digital platforms."],
@@ -84,13 +76,6 @@ const featured = [
   { label: "02 / Place", title: "Show the scale. Reveal the experience.", image: droneImage, alt: "Aerial view of contemporary architecture by a lake", note: "Drone · Virtual tours · Real estate" },
   { label: "03 / Industry", title: "Bring complex work into clear focus.", image: industrialImage, alt: "Camera operator filming inside a large manufacturing facility", note: "B-roll · Time-lapse · Monitoring" },
   { label: "04 / People", title: "Create portraits with a point of view.", image: photoImage, alt: "Photographer creating an editorial portrait in a studio", note: "Photography · Campaigns · Editorial" },
-];
-
-const projects = [
-  { title: "Form / Function", category: "Product Film", industry: "Sample project — replace", image: productImage, size: "lg:col-span-7" },
-  { title: "Built in Motion", category: "Industrial B-Roll", industry: "Sample project — replace", image: industrialImage, size: "lg:col-span-5" },
-  { title: "Above the Horizon", category: "Drone Cinematography", industry: "Sample project — replace", image: droneImage, size: "lg:col-span-5" },
-  { title: "A Human Point of View", category: "Brand Documentary", industry: "Sample project — replace", image: testimonialImage, size: "lg:col-span-7" },
 ];
 
 const industries = [
@@ -128,13 +113,13 @@ function goTo(id: string) {
   document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
 }
 
-function BrandMark({ inverse = false }: { inverse?: boolean }) {
+function BrandMark({ inverse = false, onClick }: { inverse?: boolean; onClick?: () => void }) {
   return (
-    <a href="#top" aria-label="[COMPANY NAME] home" className={`group flex items-center gap-2 ${inverse ? "text-paper" : "text-foreground"}`}>
+    <a href="#top" aria-label="Kekera home" onClick={onClick} className={`group flex min-w-0 items-center gap-2 ${inverse ? "text-paper" : "text-foreground"}`}>
       <span className="grid size-8 grid-cols-2 gap-0.5 border border-current p-1" aria-hidden="true">
         <span className="bg-current" /><span className="bg-signal" /><span className="bg-signal" /><span className="bg-current" />
       </span>
-      <span className="font-display text-sm font-bold uppercase leading-none">[Company<br />Name]</span>
+      <span className="truncate font-display text-sm font-bold uppercase leading-none">Kekera</span>
     </a>
   );
 }
@@ -148,24 +133,39 @@ function Navigation() {
     return () => window.removeEventListener("scroll", handle);
   }, []);
   useEffect(() => { document.body.style.overflow = open ? "hidden" : ""; return () => { document.body.style.overflow = ""; }; }, [open]);
+  useEffect(() => {
+    const desktop = window.matchMedia("(min-width: 1280px)");
+    const closeOnDesktop = () => desktop.matches && setOpen(false);
+    const closeOnEscape = (event: KeyboardEvent) => event.key === "Escape" && setOpen(false);
+    desktop.addEventListener("change", closeOnDesktop);
+    window.addEventListener("keydown", closeOnEscape);
+    return () => {
+      desktop.removeEventListener("change", closeOnDesktop);
+      window.removeEventListener("keydown", closeOnEscape);
+    };
+  }, []);
+  const navigateTo = (id: string) => {
+    setOpen(false);
+    window.requestAnimationFrame(() => window.requestAnimationFrame(() => goTo(id)));
+  };
   return (
     <header className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${scrolled ? "bg-paper/95 text-foreground shadow-sm backdrop-blur-md" : "text-paper"}`}>
-      <nav className="page-gutter flex h-20 items-center justify-between" aria-label="Main navigation">
+      <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20" aria-label="Main navigation">
         <BrandMark inverse={!scrolled} />
         <div className="hidden items-center gap-6 xl:flex">
           {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link py-2">{item}</a>)}
         </div>
         <div className="flex items-center gap-3">
           <Button variant={scrolled ? "editorial" : "inverted"} size="editorial" onClick={() => goTo("contact")} className="hidden sm:inline-flex">Request a quote <ArrowRight /></Button>
-          <Button variant="ghost" size="icon" className="xl:hidden" aria-label="Open menu" onClick={() => setOpen(true)}><Menu className="size-5" /></Button>
+          <Button variant="ghost" size="icon" className="shrink-0 xl:hidden" aria-label="Open menu" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(true)}><Menu className="size-5" /></Button>
         </div>
       </nav>
-      <div className={`fixed inset-0 z-50 flex flex-col bg-ink text-paper transition-transform duration-500 xl:hidden ${open ? "translate-y-0" : "-translate-y-full"}`} aria-hidden={!open}>
-        <div className="page-gutter flex h-20 items-center justify-between"><BrandMark inverse /><Button variant="ghost" size="icon" aria-label="Close menu" onClick={() => setOpen(false)}><X /></Button></div>
-        <div className="page-gutter flex flex-1 flex-col justify-center gap-1">
-          {navItems.map((item, index) => <a key={item} href={`#${item.toLowerCase()}`} onClick={() => setOpen(false)} className="font-display text-5xl uppercase leading-none sm:text-7xl"><sup className="mr-3 text-xs text-signal">0{index + 1}</sup>{item}</a>)}
+      <div id="mobile-menu" className={`fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ink text-paper transition-[transform,visibility] duration-300 xl:hidden ${open ? "visible translate-x-0" : "invisible translate-x-full pointer-events-none"}`} aria-hidden={!open}>
+        <div className="page-gutter grid h-16 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20"><BrandMark inverse onClick={() => navigateTo("top")} /><Button variant="ghost" size="icon" className="shrink-0" aria-label="Close menu" onClick={() => setOpen(false)}><X /></Button></div>
+        <div className="page-gutter flex flex-1 flex-col justify-center gap-3 py-8">
+          {navItems.map((item, index) => <a key={item} href={`#${item.toLowerCase()}`} onClick={(event) => { event.preventDefault(); navigateTo(item.toLowerCase()); }} className="font-display text-4xl uppercase leading-none sm:text-6xl"><sup className="mr-3 text-xs text-signal">0{index + 1}</sup>{item}</a>)}
         </div>
-        <div className="page-gutter pb-8"><Button variant="inverted" size="editorial" className="w-full" onClick={() => { setOpen(false); goTo("contact"); }}>Request a quote <ArrowRight /></Button></div>
+        <div className="page-gutter shrink-0 pb-6"><Button variant="inverted" size="editorial" className="w-full" onClick={() => navigateTo("contact")}>Request a quote <ArrowRight /></Button></div>
       </div>
     </header>
   );
@@ -184,25 +184,31 @@ function MediaImage({ src, alt, className = "" }: { src: string; alt: string; cl
   return <div className={`overflow-hidden bg-muted ${className}`}><img src={src} alt={alt} loading="lazy" width={1600} height={1200} className="media-zoom h-full w-full object-cover group-hover:scale-[1.035]" /></div>;
 }
 
-function ShowreelDialog({ open, setOpen }: { open: boolean; setOpen: (open: boolean) => void }) {
-  const [playing, setPlaying] = useState(false);
-  return <Dialog open={open} onOpenChange={(next) => { setOpen(next); if (!next) setPlaying(false); }}><DialogContent className="max-w-6xl border-paper/20 bg-ink p-0 text-paper shadow-2xl sm:rounded-none"><DialogTitle className="sr-only">[COMPANY NAME] showreel</DialogTitle><DialogDescription className="sr-only">Showreel media placeholder ready for the final production reel.</DialogDescription><div className="relative aspect-video overflow-hidden"><img src={heroImage} alt="Film crew preparing a cinematic production" className={`h-full w-full object-cover transition duration-1000 ${playing ? "scale-105 opacity-70" : ""}`} /><div className="absolute inset-0 bg-ink/35" /><div className="absolute inset-0 flex flex-col items-center justify-center gap-5 text-center"><Button variant="inverted" size="icon" className="size-20 rounded-full" aria-label={playing ? "Pause showreel placeholder" : "Play showreel placeholder"} onClick={() => setPlaying(!playing)}>{playing ? <Pause className="size-6" /> : <Play className="ml-1 size-6" />}</Button><p className="label-caps">{playing ? "Showreel media placeholder — replace with final film" : "Play showreel"}</p></div></div></DialogContent></Dialog>;
-}
-
 function Index() {
-  const [showreelOpen, setShowreelOpen] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const form = event.currentTarget;
     if (!form.checkValidity()) { form.reportValidity(); return; }
-    setSubmitted(true); form.reset();
+    const values = new FormData(form);
+    const lines = [
+      `Name: ${String(values.get("name") ?? "")}`,
+      `Company: ${String(values.get("company") ?? "")}`,
+      `Phone: ${String(values.get("phone") ?? "")}`,
+      `Project type: ${String(values.get("projectType") ?? "")}`,
+      `Industry: ${String(values.get("industry") ?? "")}`,
+      `Timeline: ${String(values.get("timeline") ?? "")}`,
+      `Budget: ${String(values.get("budget") ?? "")}`,
+      `Preferred contact: ${String(values.get("contactMethod") ?? "Email")}`,
+      "",
+      String(values.get("description") ?? ""),
+    ];
+    window.location.href = `mailto:Divyaramani@kekerainc.com?subject=${encodeURIComponent("Project inquiry for Kekera")}&body=${encodeURIComponent(lines.join("\n"))}`;
   };
   return <main id="top">
     <Navigation />
 
     <section className="relative min-h-[94svh] overflow-hidden bg-ink text-paper">
-      <img src={heroImage} alt="Professional cinema crew creating a film in an architectural interior" width={1920} height={1088} fetchPriority="high" className="hero-drift absolute inset-0 h-full w-full object-cover" />
+      <img src={heroImage} alt="Professional cinema crew creating a film in an architectural interior" width={1920} height={1088} fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-ink/45" /><div className="absolute inset-0 bg-linear-to-t from-ink via-transparent to-ink/25" />
       <div className="page-gutter relative flex min-h-[94svh] flex-col justify-end pb-9 pt-28">
         <p className="label-caps hero-rise mb-6" style={{ animationDelay: ".1s" }}>Video production <span className="text-signal">•</span> Photography <span className="text-signal">•</span> Visual storytelling</p>
@@ -214,7 +220,7 @@ function Index() {
         </h1>
         <div className="mt-8 grid gap-7 border-t border-paper/35 pt-5 md:grid-cols-12 md:items-end">
           <p className="max-w-xl text-sm leading-relaxed text-paper/80 md:col-span-5 md:col-start-5">Custom production, photography, animation, aerial cinematography, and visual storytelling for businesses, organizations, and creators.</p>
-          <div className="flex flex-wrap gap-3 md:col-span-3 md:justify-end"><Button variant="inverted" size="editorial" onClick={() => goTo("contact")}>Request a quote <ArrowRight /></Button><Button variant="editorialOutline" size="editorial" onClick={() => goTo("work")}>View work</Button></div>
+          <div className="flex flex-wrap gap-3 md:col-span-3 md:justify-end"><Button variant="inverted" size="editorial" onClick={() => goTo("contact")}>Request a quote <ArrowRight /></Button><Button variant="editorialOutline" size="editorial" onClick={() => goTo("services")}>View services</Button></div>
         </div>
         <a href="#intro" className="label-caps mt-9 flex w-max items-center gap-3">Scroll to explore <span className="pulse-line inline-block h-8 w-px bg-signal" /></a>
       </div>
@@ -237,49 +243,33 @@ function Index() {
       </div>
     </section>
 
-    <section className="page-gutter py-24 sm:py-36">
+    <section id="work" className="page-gutter py-24 sm:py-36">
       <SectionHeader label="Featured capabilities / 02" title="Different stories need different ways of seeing." />
       <div className="mt-20 space-y-28">
         {featured.map((item, index) => <article key={item.label} className={`group grid items-end gap-7 lg:grid-cols-12 ${index % 2 ? "" : ""}`}><MediaImage src={item.image} alt={item.alt} className={`aspect-[4/3] lg:col-span-8 ${index % 2 ? "lg:col-start-5 lg:row-start-1" : ""}`} /><div className={`lg:col-span-4 ${index % 2 ? "lg:col-start-1 lg:row-start-1" : ""}`}><p className="label-caps text-signal">{item.label}</p><h3 className="mt-4 font-display text-4xl leading-[.95] sm:text-6xl">{item.title}</h3><p className="mt-6 text-sm text-muted-foreground">{item.note}</p><button className="label-caps mt-8 flex items-center gap-3 border-b border-current pb-2" onClick={() => goTo("contact")}>Explore service <ArrowRight className="size-4" /></button></div></article>)}
       </div>
     </section>
 
-    <section id="work" className="bg-paper py-24 sm:py-36">
-      <div className="page-gutter"><SectionHeader label="Selected work / 03" title="Projects made to be seen." /><p className="mt-8 max-w-lg text-muted-foreground lg:ml-[25%]">A flexible case-study system, ready for your real project titles, clients, footage, and stories.</p></div>
-      <div className="page-gutter mt-16 grid gap-x-5 gap-y-16 lg:grid-cols-12">
-        {projects.map((project, index) => <article key={project.title} className={`group ${project.size}`}><MediaImage src={project.image} alt={`${project.category} sample imagery`} className={`${index === 1 || index === 2 ? "aspect-[4/5]" : "aspect-[16/10]"}`} /><div className="mt-4 flex items-start justify-between gap-5 border-t border-foreground/25 pt-3"><div><h3 className="font-display text-2xl">{project.title}</h3><p className="label-caps mt-2 text-signal">{project.industry}</p></div><p className="text-xs text-muted-foreground">{project.category}</p></div></article>)}
-      </div>
-    </section>
-
-    <section className="page-gutter bg-ink py-24 text-paper sm:py-36">
-      <div className="mb-10 flex items-end justify-between"><div><p className="label-caps text-signal">Showreel / 04</p><h2 className="section-display mt-4">Watch the work.</h2></div><ArrowDown className="hidden size-12 sm:block" /></div>
-      <button className="group relative block aspect-video w-full overflow-hidden text-paper" onClick={() => setShowreelOpen(true)} aria-label="Open showreel"><img src={heroImage} alt="Film production showreel poster" loading="lazy" width={1920} height={1088} className="media-zoom h-full w-full object-cover group-hover:scale-[1.025]" /><span className="absolute inset-0 bg-ink/30" /><span className="absolute inset-0 grid place-items-center"><span className="flex size-24 items-center justify-center rounded-full bg-paper text-ink transition-transform group-hover:scale-110"><Play className="ml-1 size-7" /></span></span><span className="label-caps absolute bottom-5 left-5">Play showreel · Media placeholder</span></button>
-    </section>
-
     <section id="industries" className="page-gutter py-24 sm:py-36">
-      <SectionHeader label="Who we work with / 05" title="Visual storytelling for every kind of business." />
+      <SectionHeader label="Who we work with / 03" title="Visual storytelling for every kind of business." />
       <div className="mt-20 grid border-l border-t border-foreground/25 md:grid-cols-2 lg:grid-cols-3">
         {industries.map(([title, copy], index) => <article key={title} className="group min-h-64 border-b border-r border-foreground/25 p-6 transition-colors hover:bg-signal hover:text-paper"><p className="label-caps">0{index + 1}</p><h3 className="mt-16 font-display text-3xl">{title}</h3><p className="mt-4 max-w-xs text-sm leading-relaxed opacity-65">{copy}</p></article>)}
       </div>
     </section>
 
     <section className="page-gutter overflow-hidden bg-signal py-24 text-paper sm:py-36">
-      <p className="label-caps">Why professional visuals? / 06</p><h2 className="section-display mt-7 max-w-[16ch]">Good visuals don't just look better. They communicate better.</h2>
+      <p className="label-caps">Why professional visuals? / 04</p><h2 className="section-display mt-7 max-w-[16ch]">Good visuals don't just look better. They communicate better.</h2>
       <ol className="mt-20 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">{benefits.map((benefit, index) => <li key={benefit} className="border-t border-paper/35 py-6"><span className="font-display text-6xl text-paper/35">{String(index + 1).padStart(2, "0")}</span><p className="mt-5 max-w-[17rem] text-lg font-semibold">{benefit}</p></li>)}</ol>
     </section>
 
     <section id="process" className="page-gutter py-24 sm:py-36">
-      <SectionHeader label="How we work / 07" title="From the first idea to the final frame." />
+      <SectionHeader label="How we work / 05" title="From the first idea to the final frame." />
       <div className="mt-20 lg:ml-[25%]">{process.map(([title, copy], index) => <article key={title} className="group grid gap-5 border-t border-foreground/25 py-8 sm:grid-cols-[7rem_1fr_1fr]"><span className="font-display text-5xl text-signal">0{index + 1}</span><h3 className="font-display text-4xl">{title}</h3><p className="max-w-lg text-sm leading-relaxed text-muted-foreground">{copy}</p></article>)}</div>
     </section>
 
     <section id="about" className="grid bg-ink text-paper lg:grid-cols-2">
-      <div className="page-gutter flex flex-col justify-center py-24 lg:py-32"><p className="label-caps text-signal">The difference / 08</p><h2 className="section-display mt-6">We don't just capture footage. We build visual stories.</h2><p className="mt-10 max-w-xl leading-relaxed text-paper/65">Every project is different. We combine production expertise, creative thinking, technical execution, and storytelling to create content that serves a real purpose.</p><div className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-paper/25 pt-5 label-caps"><span>Story</span><span>Strategy</span><span>Quality</span><span>Communication</span><span>Reliability</span></div></div>
+      <div className="page-gutter flex flex-col justify-center py-24 lg:py-32"><p className="label-caps text-signal">The difference / 06</p><h2 className="section-display mt-6">We don't just capture footage. We build visual stories.</h2><p className="mt-10 max-w-xl leading-relaxed text-paper/65">Every project is different. We combine production expertise, creative thinking, technical execution, and storytelling to create content that serves a real purpose.</p><div className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-paper/25 pt-5 label-caps"><span>Story</span><span>Strategy</span><span>Quality</span><span>Communication</span><span>Reliability</span></div></div>
       <img src={testimonialImage} alt="Professional interview production in progress" loading="lazy" width={1600} height={1104} className="h-full min-h-[34rem] w-full object-cover" />
-    </section>
-
-    <section className="page-gutter py-24 sm:py-36">
-      <p className="label-caps text-signal">Client voice / Placeholder</p><blockquote className="mt-12 max-w-6xl font-display text-4xl leading-tight sm:text-7xl">“Add a verified client testimonial here. This section is intentionally ready for a real story—not a fabricated one.”</blockquote><footer className="mt-12 border-t border-foreground/25 pt-5 text-sm text-muted-foreground">[CLIENT NAME] · [COMPANY] · [INDUSTRY]</footer>
     </section>
 
     <section className="group relative min-h-[75svh] overflow-hidden bg-ink text-paper">
@@ -287,7 +277,7 @@ function Index() {
     </section>
 
     <section id="contact" className="page-gutter bg-paper py-24 sm:py-36">
-      <SectionHeader label="Project inquiry / 09" title="Tell us what you want to make." />
+      <SectionHeader label="Project inquiry / 07" title="Tell us what you want to make." />
       <form className="mt-20 grid gap-x-8 gap-y-8 lg:ml-[25%] lg:grid-cols-2" onSubmit={submit} noValidate={false}>
         <Field label="Name" required><Input name="name" required placeholder="Your name" /></Field>
         <Field label="Company"><Input name="company" placeholder="Company or organization" /></Field>
@@ -298,15 +288,12 @@ function Index() {
         <Field label="Desired timeline"><Input name="timeline" placeholder="When do you need it?" /></Field>
         <Field label="Budget range"><NativeSelect name="budget" options={["Select a range", "Under $2,500", "$2,500–$5,000", "$5,000–$10,000", "$10,000–$25,000", "$25,000+", "Not sure yet"]} /></Field>
         <Field label="Project description" required className="lg:col-span-2"><Textarea name="description" required rows={6} placeholder="What are you creating, who is it for, and what should it achieve?" /></Field>
-        <Field label="Attach reference files" className="lg:col-span-2"><label className="flex min-h-24 cursor-pointer items-center justify-between border border-dashed border-input px-5 transition-colors hover:border-signal"><span className="text-sm text-muted-foreground">Choose files to attach</span><Paperclip className="size-5" /><Input name="references" type="file" multiple className="sr-only" /></label></Field>
         <Field label="Preferred contact method" className="lg:col-span-2"><div className="flex flex-wrap gap-5">{["Email", "Phone", "Video Call"].map((method) => <label key={method} className="flex cursor-pointer items-center gap-2 text-sm"><input type="radio" name="contactMethod" value={method} defaultChecked={method === "Email"} className="size-4 accent-signal" />{method}</label>)}</div></Field>
-        <div className="flex flex-wrap items-center gap-5 lg:col-span-2"><Button type="submit" variant="editorial" size="editorial">Send project inquiry <ArrowRight /></Button><p className="max-w-md text-xs leading-relaxed text-muted-foreground">Demo form: connect your preferred email or project system before publishing to receive submissions.</p></div>
-        {submitted && <div role="status" className="flex items-center gap-3 border border-signal bg-signal/10 p-4 text-sm lg:col-span-2"><Check className="size-5 text-signal" />Your inquiry was validated successfully. Connect a form destination to deliver it.</div>}
+        <div className="flex flex-wrap items-center gap-5 lg:col-span-2"><Button type="submit" variant="editorial" size="editorial">Email project inquiry <ArrowRight /></Button><p className="max-w-md text-xs leading-relaxed text-muted-foreground">This opens your email app with the project details addressed to Kekera.</p></div>
       </form>
     </section>
 
     <Footer />
-    <ShowreelDialog open={showreelOpen} setOpen={setShowreelOpen} />
   </main>;
 }
 
@@ -319,5 +306,5 @@ function NativeSelect({ options, ...props }: SelectHTMLAttributes<HTMLSelectElem
 }
 
 function Footer() {
-  return <footer className="bg-ink text-paper"><Marquee dark /><div className="page-gutter py-16"><div className="grid gap-12 border-b border-paper/25 pb-16 md:grid-cols-12"><div className="md:col-span-5"><BrandMark inverse /><p className="mt-8 max-w-sm text-sm leading-relaxed text-paper/60">Full-service video production, photography, aerial cinematography, animation, and visual storytelling.</p></div><div className="grid grid-cols-2 gap-8 md:col-span-4"><div><p className="label-caps mb-5 text-signal">Navigate</p>{navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="mb-2 block text-sm">{item}</a>)}</div><div><p className="label-caps mb-5 text-signal">Social</p>{["Instagram", "LinkedIn", "YouTube", "Vimeo"].map((item) => <span key={item} className="mb-2 block text-sm text-paper/70">{item}</span>)}</div></div><div className="md:col-span-3"><p className="label-caps mb-5 text-signal">Contact placeholders</p><p className="text-sm">[COMPANY EMAIL]</p><p className="mt-2 text-sm">[PHONE NUMBER]</p><p className="mt-2 text-sm">[CITY / LOCATION]</p></div></div><p className="section-display py-16 uppercase">Let's make something worth watching.</p><div className="flex flex-col gap-3 border-t border-paper/25 pt-5 text-xs text-paper/50 sm:flex-row sm:items-center sm:justify-between"><p>© 2026 [COMPANY NAME]. All rights reserved.</p><div className="flex gap-5"><span>Privacy Policy</span><span>Terms</span></div></div></div></footer>;
+  return <footer className="bg-ink text-paper"><Marquee dark /><div className="page-gutter py-16"><div className="grid gap-12 border-b border-paper/25 pb-16 md:grid-cols-12"><div className="md:col-span-6"><BrandMark inverse /><p className="mt-8 max-w-sm text-sm leading-relaxed text-paper/60">Full-service video production, photography, aerial cinematography, animation, and visual storytelling.</p></div><div className="md:col-span-3"><p className="label-caps mb-5 text-signal">Navigate</p>{navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="mb-2 block text-sm">{item}</a>)}</div><div className="md:col-span-3"><p className="label-caps mb-5 text-signal">Contact</p><a className="break-all text-sm hover:text-signal" href="mailto:Divyaramani@kekerainc.com">Divyaramani@kekerainc.com</a></div></div><p className="section-display py-16 uppercase">Let's make something worth watching.</p><div className="border-t border-paper/25 pt-5 text-xs text-paper/50"><p>© 2026 Kekera. All rights reserved.</p></div></div></footer>;
 }
