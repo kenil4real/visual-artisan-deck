@@ -6,6 +6,7 @@ import {
   type ReactNode,
   type SelectHTMLAttributes,
 } from "react";
+import { createPortal } from "react-dom";
 import {
   ArrowRight,
   Menu,
@@ -127,6 +128,8 @@ function BrandMark({ inverse = false, onClick }: { inverse?: boolean; onClick?: 
 function Navigation() {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 48);
     handle(); window.addEventListener("scroll", handle, { passive: true });
@@ -148,26 +151,31 @@ function Navigation() {
     setOpen(false);
     window.requestAnimationFrame(() => window.requestAnimationFrame(() => goTo(id)));
   };
-  return (
-    <header className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${scrolled ? "bg-paper/95 text-foreground shadow-sm backdrop-blur-md" : "text-paper"}`}>
-      <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20" aria-label="Main navigation">
-        <BrandMark inverse={!scrolled} />
-        <div className="hidden items-center gap-6 xl:flex">
-          {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link py-2">{item}</a>)}
-        </div>
-        <div className="flex items-center gap-3">
-          <Button variant={scrolled ? "editorial" : "inverted"} size="editorial" onClick={() => goTo("contact")} className="hidden sm:inline-flex">Request a quote <ArrowRight /></Button>
-          <Button variant="ghost" size="icon" className="shrink-0 xl:hidden" aria-label="Open menu" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(true)}><Menu className="size-5" /></Button>
-        </div>
-      </nav>
-      <div id="mobile-menu" className={`fixed inset-0 z-50 flex flex-col overflow-y-auto bg-ink text-paper transition-[transform,visibility] duration-300 xl:hidden ${open ? "visible translate-x-0" : "invisible translate-x-full pointer-events-none"}`} aria-hidden={!open}>
-        <div className="page-gutter grid h-16 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20"><BrandMark inverse onClick={() => navigateTo("top")} /><Button variant="ghost" size="icon" className="shrink-0" aria-label="Close menu" onClick={() => setOpen(false)}><X /></Button></div>
-        <div className="page-gutter flex flex-1 flex-col justify-center gap-3 py-8">
-          {navItems.map((item, index) => <a key={item} href={`#${item.toLowerCase()}`} onClick={(event) => { event.preventDefault(); navigateTo(item.toLowerCase()); }} className="font-display text-4xl uppercase leading-none sm:text-6xl"><sup className="mr-3 text-xs text-signal">0{index + 1}</sup>{item}</a>)}
-        </div>
-        <div className="page-gutter shrink-0 pb-6"><Button variant="inverted" size="editorial" className="w-full" onClick={() => navigateTo("contact")}>Request a quote <ArrowRight /></Button></div>
+  const mobileMenu = (
+    <div id="mobile-menu" className={`fixed inset-0 z-50 flex h-dvh w-screen flex-col overflow-y-auto overscroll-contain bg-ink text-paper transition-[transform,visibility] duration-300 xl:hidden ${open ? "visible translate-x-0" : "pointer-events-none invisible translate-x-full"}`} aria-hidden={!open}>
+      <div className="page-gutter grid h-16 shrink-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20"><BrandMark inverse onClick={() => navigateTo("top")} /><Button variant="ghost" size="icon" className="shrink-0" aria-label="Close menu" onClick={() => setOpen(false)}><X /></Button></div>
+      <div className="page-gutter flex min-h-0 flex-1 flex-col justify-center gap-3 py-8">
+        {navItems.map((item, index) => <a key={item} href={`#${item.toLowerCase()}`} onClick={(event) => { event.preventDefault(); navigateTo(item.toLowerCase()); }} className="font-display text-4xl uppercase leading-none sm:text-6xl"><sup className="mr-3 text-xs text-signal">0{index + 1}</sup>{item}</a>)}
       </div>
-    </header>
+      <div className="page-gutter shrink-0 pb-[max(1.5rem,env(safe-area-inset-bottom))]"><Button variant="inverted" size="editorial" className="w-full" onClick={() => navigateTo("contact")}>Request a quote <ArrowRight /></Button></div>
+    </div>
+  );
+  return (
+    <>
+      <header className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${scrolled ? "bg-paper/95 text-foreground shadow-sm backdrop-blur-md" : "text-paper"}`}>
+        <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20" aria-label="Main navigation">
+          <BrandMark inverse={!scrolled} />
+          <div className="hidden items-center gap-6 xl:flex">
+            {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link py-2">{item}</a>)}
+          </div>
+          <div className="flex items-center gap-3">
+            <Button variant={scrolled ? "editorial" : "inverted"} size="editorial" onClick={() => goTo("contact")} className="hidden sm:inline-flex">Request a quote <ArrowRight /></Button>
+            <Button variant="ghost" size="icon" className="shrink-0 xl:hidden" aria-label="Open menu" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(true)}><Menu className="size-5" /></Button>
+          </div>
+        </nav>
+      </header>
+      {mounted ? createPortal(mobileMenu, document.body) : null}
+    </>
   );
 }
 
