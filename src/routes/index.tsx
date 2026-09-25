@@ -163,12 +163,12 @@ function Navigation() {
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${scrolled ? "bg-paper/95 text-foreground shadow-sm backdrop-blur-md" : "text-paper"}`}>
-        <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-8" aria-label="Main navigation">
-          <BrandMark inverse={!scrolled} />
-          <div className="hidden min-w-0 items-center justify-end gap-6 xl:flex">
-            {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link py-2">{item}</a>)}
+        <nav className="page-gutter flex h-16 flex-nowrap items-center justify-between gap-3 sm:h-20 xl:gap-8" aria-label="Main navigation">
+          <div className="min-w-0 shrink-0"><BrandMark inverse={!scrolled} /></div>
+          <div className="ml-auto hidden min-w-0 items-center justify-end gap-6 xl:flex">
+            {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link whitespace-nowrap py-2">{item}</a>)}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex shrink-0 items-center gap-3">
             <Button variant={scrolled ? "editorial" : "inverted"} size="editorial" onClick={() => goTo("contact")} className="hidden sm:inline-flex">Request a quote <ArrowRight /></Button>
             <Button variant="ghost" size="icon" className="shrink-0 xl:hidden" aria-label="Open menu" aria-expanded={open} aria-controls="mobile-menu" onClick={() => setOpen(true)}><Menu className="size-5" /></Button>
           </div>
