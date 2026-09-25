@@ -208,7 +208,7 @@ function Index() {
     <Navigation />
 
     <section className="relative min-h-[94svh] overflow-hidden bg-ink text-paper">
-      <img src={heroImage} alt="Professional cinema crew creating a film in an architectural interior" width={1920} height={1088} fetchPriority="high" className="hero-drift absolute inset-0 h-full w-full object-cover" />
+      <img src={heroImage} alt="Professional cinema crew creating a film in an architectural interior" width={1920} height={1088} fetchPriority="high" className="absolute inset-0 h-full w-full object-cover" />
       <div className="absolute inset-0 bg-ink/45" /><div className="absolute inset-0 bg-linear-to-t from-ink via-transparent to-ink/25" />
       <div className="page-gutter relative flex min-h-[94svh] flex-col justify-end pb-9 pt-28">
         <p className="label-caps hero-rise mb-6" style={{ animationDelay: ".1s" }}>Video production <span className="text-signal">•</span> Photography <span className="text-signal">•</span> Visual storytelling</p>
@@ -251,24 +251,24 @@ function Index() {
     </section>
 
     <section id="industries" className="page-gutter py-24 sm:py-36">
-      <SectionHeader label="Who we work with / 05" title="Visual storytelling for every kind of business." />
+      <SectionHeader label="Who we work with / 03" title="Visual storytelling for every kind of business." />
       <div className="mt-20 grid border-l border-t border-foreground/25 md:grid-cols-2 lg:grid-cols-3">
         {industries.map(([title, copy], index) => <article key={title} className="group min-h-64 border-b border-r border-foreground/25 p-6 transition-colors hover:bg-signal hover:text-paper"><p className="label-caps">0{index + 1}</p><h3 className="mt-16 font-display text-3xl">{title}</h3><p className="mt-4 max-w-xs text-sm leading-relaxed opacity-65">{copy}</p></article>)}
       </div>
     </section>
 
     <section className="page-gutter overflow-hidden bg-signal py-24 text-paper sm:py-36">
-      <p className="label-caps">Why professional visuals? / 06</p><h2 className="section-display mt-7 max-w-[16ch]">Good visuals don't just look better. They communicate better.</h2>
+      <p className="label-caps">Why professional visuals? / 04</p><h2 className="section-display mt-7 max-w-[16ch]">Good visuals don't just look better. They communicate better.</h2>
       <ol className="mt-20 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-4">{benefits.map((benefit, index) => <li key={benefit} className="border-t border-paper/35 py-6"><span className="font-display text-6xl text-paper/35">{String(index + 1).padStart(2, "0")}</span><p className="mt-5 max-w-[17rem] text-lg font-semibold">{benefit}</p></li>)}</ol>
     </section>
 
     <section id="process" className="page-gutter py-24 sm:py-36">
-      <SectionHeader label="How we work / 07" title="From the first idea to the final frame." />
+      <SectionHeader label="How we work / 05" title="From the first idea to the final frame." />
       <div className="mt-20 lg:ml-[25%]">{process.map(([title, copy], index) => <article key={title} className="group grid gap-5 border-t border-foreground/25 py-8 sm:grid-cols-[7rem_1fr_1fr]"><span className="font-display text-5xl text-signal">0{index + 1}</span><h3 className="font-display text-4xl">{title}</h3><p className="max-w-lg text-sm leading-relaxed text-muted-foreground">{copy}</p></article>)}</div>
     </section>
 
     <section id="about" className="grid bg-ink text-paper lg:grid-cols-2">
-      <div className="page-gutter flex flex-col justify-center py-24 lg:py-32"><p className="label-caps text-signal">The difference / 08</p><h2 className="section-display mt-6">We don't just capture footage. We build visual stories.</h2><p className="mt-10 max-w-xl leading-relaxed text-paper/65">Every project is different. We combine production expertise, creative thinking, technical execution, and storytelling to create content that serves a real purpose.</p><div className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-paper/25 pt-5 label-caps"><span>Story</span><span>Strategy</span><span>Quality</span><span>Communication</span><span>Reliability</span></div></div>
+      <div className="page-gutter flex flex-col justify-center py-24 lg:py-32"><p className="label-caps text-signal">The difference / 06</p><h2 className="section-display mt-6">We don't just capture footage. We build visual stories.</h2><p className="mt-10 max-w-xl leading-relaxed text-paper/65">Every project is different. We combine production expertise, creative thinking, technical execution, and storytelling to create content that serves a real purpose.</p><div className="mt-12 flex flex-wrap gap-x-6 gap-y-3 border-t border-paper/25 pt-5 label-caps"><span>Story</span><span>Strategy</span><span>Quality</span><span>Communication</span><span>Reliability</span></div></div>
       <img src={testimonialImage} alt="Professional interview production in progress" loading="lazy" width={1600} height={1104} className="h-full min-h-[34rem] w-full object-cover" />
     </section>
 
@@ -277,7 +277,7 @@ function Index() {
     </section>
 
     <section id="contact" className="page-gutter bg-paper py-24 sm:py-36">
-      <SectionHeader label="Project inquiry / 09" title="Tell us what you want to make." />
+      <SectionHeader label="Project inquiry / 07" title="Tell us what you want to make." />
       <form className="mt-20 grid gap-x-8 gap-y-8 lg:ml-[25%] lg:grid-cols-2" onSubmit={submit} noValidate={false}>
         <Field label="Name" required><Input name="name" required placeholder="Your name" /></Field>
         <Field label="Company"><Input name="company" placeholder="Company or organization" /></Field>
