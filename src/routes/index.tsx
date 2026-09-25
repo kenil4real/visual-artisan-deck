@@ -163,9 +163,9 @@ function Navigation() {
   return (
     <>
       <header className={`fixed inset-x-0 top-0 z-40 transition-all duration-500 ${scrolled ? "bg-paper/95 text-foreground shadow-sm backdrop-blur-md" : "text-paper"}`}>
-        <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20" aria-label="Main navigation">
+        <nav className="page-gutter grid h-16 grid-cols-[minmax(0,1fr)_auto] items-center gap-3 sm:h-20 xl:grid-cols-[auto_minmax(0,1fr)_auto] xl:gap-8" aria-label="Main navigation">
           <BrandMark inverse={!scrolled} />
-          <div className="hidden items-center gap-6 xl:flex">
+          <div className="hidden min-w-0 items-center justify-end gap-6 xl:flex">
             {navItems.map((item) => <a key={item} href={`#${item.toLowerCase()}`} className="label-caps story-link py-2">{item}</a>)}
           </div>
           <div className="flex items-center gap-3">

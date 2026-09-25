@@ -11,3 +11,4 @@
 - [x] Replace company placeholders with Kekera and remove all unverified portfolio/testimonial data
 - [x] Make inquiries deliverable through a pre-addressed email draft
 - [x] Render the mobile navigation above the scrolling header at full viewport size
+- [x] Keep the desktop navigation logo, links, and quote button aligned in one row
