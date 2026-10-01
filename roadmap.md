@@ -12,3 +12,5 @@
 - [x] Make inquiries deliverable through a pre-addressed email draft
 - [x] Render the mobile navigation above the scrolling header at full viewport size
 - [x] Keep the desktop navigation logo, links, and quote button aligned in one row
+- [x] Add Field Notes blog: /blog/ index with post cards and newsletter signup, three launch posts (retainer guide, ad creative, local SEO), agency-framed copy, mobile-verified
+- [x] Add Blog link to main navigation, mobile menu, and footer
