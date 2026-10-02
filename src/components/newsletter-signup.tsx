@@ -47,7 +47,7 @@ export function NewsletterSignup({ dark = false }: { dark?: boolean }) {
         <div>
           <p className="font-display text-lg font-semibold">You are on the list.</p>
           <p className={`mt-1 text-sm ${dark ? "text-paper/70" : "text-muted-foreground"}`}>
-            Field Notes lands once a month. Unsubscribe anytime.
+            The Growth Ledger lands once a month. Unsubscribe anytime.
           </p>
         </div>
       </div>

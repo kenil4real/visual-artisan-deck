@@ -8,13 +8,13 @@ import { posts } from "@/lib/blog";
 export const Route = createFileRoute("/blog/")({
   head: () => ({
     meta: [
-      { title: "Field Notes — The Kekera Blog" },
+      { title: "The Growth Ledger — The Kekera Blog" },
       {
         name: "description",
         content:
-          "Field Notes from Kekera: practical marketing notes for small businesses — retainers, ad creative, local SEO, and what actually moves the needle.",
+          "The Growth Ledger from Kekera: practical marketing notes for small businesses — retainers, ad creative, local SEO, and what actually moves the needle.",
       },
-      { property: "og:title", content: "Field Notes — The Kekera Blog" },
+      { property: "og:title", content: "The Growth Ledger — The Kekera Blog" },
       {
         property: "og:description",
         content:
@@ -37,7 +37,7 @@ function BlogIndex() {
 
       <section className="page-gutter bg-ink pb-16 pt-16 text-paper sm:pb-24 sm:pt-24">
         <p className="label-caps text-signal">The Kekera blog</p>
-        <h1 className="section-display mt-6 max-w-[12ch] uppercase">Field Notes</h1>
+        <h1 className="section-display mt-6 max-w-[12ch] uppercase">The Growth Ledger</h1>
         <p className="mt-8 max-w-xl text-base leading-relaxed text-paper/70">
           Practical marketing notes for small businesses: what we are seeing across real accounts,
           what is working, and what we would stop doing. Written by the people who run it.
@@ -114,7 +114,7 @@ function BlogIndex() {
           <div className="lg:col-span-6">
             <p className="label-caps text-signal">Newsletter</p>
             <h2 className="mt-4 font-display text-3xl leading-tight sm:text-5xl">
-              Field Notes, once a month.
+              The Growth Ledger, once a month.
             </h2>
             <p className="mt-5 max-w-md text-sm leading-relaxed text-paper/70">
               One email a month: what we are seeing across client accounts, what is working, what we

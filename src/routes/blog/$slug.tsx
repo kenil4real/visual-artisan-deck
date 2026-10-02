@@ -13,9 +13,9 @@ export const Route = createFileRoute("/blog/$slug")({
   },
   head: ({ loaderData }) => ({
     meta: [
-      { title: `${loaderData?.title ?? "Post"} — Kekera Field Notes` },
-      { name: "description", content: loaderData?.excerpt ?? "A Kekera Field Notes post." },
-      { property: "og:title", content: `${loaderData?.title ?? "Post"} — Kekera Field Notes` },
+      { title: `${loaderData?.title ?? "Post"} — The Kekera Growth Ledger` },
+      { name: "description", content: loaderData?.excerpt ?? "A post from The Kekera Growth Ledger." },
+      { property: "og:title", content: `${loaderData?.title ?? "Post"} — The Kekera Growth Ledger` },
       { property: "og:description", content: loaderData?.excerpt ?? "" },
       { property: "og:type", content: "article" },
       { property: "og:url", content: `/blog/${loaderData?.slug ?? ""}/` },
@@ -112,7 +112,7 @@ function BlogPost() {
         <div className="mx-auto grid max-w-3xl gap-8">
           <div>
             <p className="label-caps text-signal">Newsletter</p>
-            <h2 className="mt-4 font-display text-3xl leading-tight">Field Notes, once a month.</h2>
+            <h2 className="mt-4 font-display text-3xl leading-tight">The Growth Ledger, once a month.</h2>
             <p className="mt-4 text-sm leading-relaxed text-paper/70">
               What we are seeing across client accounts, in your inbox. No spam, no fluff.
             </p>
