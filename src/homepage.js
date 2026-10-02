@@ -284,10 +284,91 @@ function setKPIs(key){
       note.innerHTML = original;
       input.removeAttribute("aria-invalid");
       input.value = "";
+      if (emailForm && emailForm.parentNode) emailForm.parentNode.removeChild(emailForm);
+      emailForm = null;
       input.focus();
     });
 
     input.addEventListener("input", function(){
+      if (input.getAttribute("aria-invalid") === "true"){
+        input.removeAttribute("aria-invalid");
+        note.style.color = "";
+        note.innerHTML = original;
+      }
+    });
+
+    function esc(s){
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+    }
+
+    function showEmailStep(site){
+      emailForm = document.createElement("form");
+      emailForm.className = "audit-form";
+      emailForm.setAttribute("novalidate", "");
+      emailForm.innerHTML =
+        '<input type="email" name="email" inputmode="email" autocomplete="email" placeholder="you@yourbusiness.com" aria-label="Your email address" />' +
+        '<button class="btn btn-accent" type="submit">Send my review</button>';
+      note.parentNode.insertBefore(emailForm, reset);
+      var emInput = emailForm.querySelector("input[name='email']");
+      var btn = emailForm.querySelector("button");
+      emInput.focus();
+      emailForm.addEventListener("submit", function(ev){
+        ev.preventDefault();
+        var em = emInput.value.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em)){
+          note.style.color = "#bc3a08";
+          note.innerHTML = "<b>That doesn&rsquo;t look like an email address.</b> We need it to send your PDF.";
+          emInput.focus();
+          emInput.select();
+          return;
+        }
+        note.style.color = "";
+        btn.disabled = true;
+        btn.textContent = "Scoring your site\u2026";
+        fetch("/api/growth-review", {
+          method: "POST",
+          headers: {"content-type": "application/json"},
+          body: JSON.stringify({website: site, email: em})
+        }).then(function(r){
+          return r.json().then(function(j){ return {status: r.status, body: j}; });
+        }).then(function(res){
+          if (res.status === 200 && res.body && res.body.ok){
+            emailForm.style.display = "none";
+            note.innerHTML = "<b>&#10003; Done — your review is on its way to " + esc(em) + ".</b> Your scored PDF lands within the hour, from Divya herself. <b>We reply within one business day.</b>";
+            reset.style.display = "inline-block";
+          } else {
+            btn.disabled = false;
+            btn.textContent = "Send my review";
+            note.style.color = "#bc3a08";
+            note.innerHTML = "<b>Something didn&rsquo;t work.</b> " + esc((res.body && res.body.error) || "Please try again in a minute.");
+          }
+          note.focus();
+        }).catch(function(){
+          btn.disabled = false;
+          btn.textContent = "Send my review";
+          note.style.color = "#bc3a08";
+          note.innerHTML = "<b>Something didn&rsquo;t work.</b> Check your connection and try again.";
+          note.focus();
+        });
+      });
+    }
+
+    var emailForm = null;
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      var site = cleanHost(input.value);
+      if (!isValidHost(site)){
+        input.setAttribute("aria-invalid", "true");
+        note.style.color = "#bc3a08";
+        note.innerHTML = "<b>That doesn&rsquo;t look like a website address.</b> Try yourbusiness.com &mdash; then we&rsquo;ll take it from there.";
+        input.focus();
+        input.select();
+        return;
+      }
+      input.removeAttribute("aria-invalid");
+      form.style.display = "none";
+      note.style.color = "";
       if (input.getAttribute("aria-invalid") === "true"){
         input.removeAttribute("aria-invalid");
         note.style.color = "";
@@ -309,11 +390,8 @@ function setKPIs(key){
       input.removeAttribute("aria-invalid");
       form.style.display = "none";
       note.style.color = "";
-      note.innerHTML = "<b>&#10003; Got it: " + site + ".</b> One last step &mdash; hit the button below and your email app opens with everything filled in. Send it and your scored PDF + 3-minute video lands within 24 hours. <b>We reply within one business day.</b><br>"
-      + "<a class=\"btn btn-accent\" style=\"margin-top:12px;display:inline-block;text-decoration:none\" href=\"mailto:Divyaramani@kekerainc.com?subject="
-      + encodeURIComponent("Kekera Growth Review request") + "&body="
-      + encodeURIComponent("Hi Kekera team,\n\nPlease send me my free Kekera Growth Review for this website:\n" + site + "\n\nThank you!") + "\">Send it to us &rarr;</a>";
-      reset.style.display = "inline-block";
+      note.innerHTML = "<b>&#10003; Got it: " + esc(site) + ".</b> Where should we send your scored PDF?";
+      showEmailStep(site);
       note.focus();
     });
   });
