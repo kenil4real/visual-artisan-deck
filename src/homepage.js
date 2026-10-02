@@ -405,4 +405,13 @@ function grade(){
   out.innerHTML=html;
 }
 checks.forEach(function(c){c.addEventListener("change",grade);});
+/* back to top */
+var toTop=document.getElementById("toTop");
+if(toTop){
+  var reduceMotion=window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  function ttToggle(){toTop.classList.toggle("show",window.scrollY>600);}
+  window.addEventListener("scroll",ttToggle,{passive:true});
+  ttToggle();
+  toTop.addEventListener("click",function(){window.scrollTo({top:0,behavior:reduceMotion?"auto":"smooth"});});
+}
 })();

@@ -114,3 +114,10 @@
 
 /* anchor targets: clear the sticky nav on jump (belt & suspenders with scroll-padding) */
 .kekera-home section[id], .kekera-home header[id] { scroll-margin-top: calc(var(--nav-h) + 22px); }
+
+/* ============ back to top ============ */
+.kekera-home .to-top{position:fixed;right:22px;bottom:22px;z-index:90;display:flex;flex-direction:column;align-items:center;gap:5px;padding:12px 13px;background:var(--ink);color:var(--paper-on-ink);border:1px solid var(--line-on-ink);border-radius:6px;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .3s,transform .3s,visibility .3s;box-shadow:0 10px 30px rgba(24,20,16,.28)}
+.kekera-home .to-top.show{opacity:1;visibility:visible;transform:none}
+.kekera-home .to-top:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.kekera-home .to-top svg{width:18px;height:18px}
+.kekera-home .to-top span{font:600 9px/1 var(--fm);letter-spacing:.2em;text-transform:uppercase}
