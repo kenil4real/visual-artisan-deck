@@ -38,7 +38,6 @@ export const Route = createFileRoute("/")({
           description,
           url: "https://www.kekerainc.com/",
           email: "Divyaramani@kekerainc.com",
-          telephone: "+1-267-690-1880",
           areaServed: "Berks County, PA",
         }),
       },
