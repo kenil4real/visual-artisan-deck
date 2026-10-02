@@ -121,3 +121,7 @@
 .kekera-home .to-top:hover{background:var(--accent);border-color:var(--accent);color:#fff}
 .kekera-home .to-top svg{width:18px;height:18px}
 .kekera-home .to-top span{font:600 9px/1 var(--fm);letter-spacing:.2em;text-transform:uppercase}
+/* ============ pulse demo CTA ============ */
+.kekera-home .pulse-cta{margin-top:34px;display:flex;flex-direction:column;align-items:flex-start;gap:14px}
+.kekera-home .pulse-cta .micro{color:var(--muted-on-ink);max-width:52ch}
+@media(max-width:640px){.kekera-home .pulse-cta .btn{width:100%;justify-content:center}}

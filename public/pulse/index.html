@@ -1,0 +1,1723 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="color-scheme" content="light dark" />
+    <link rel="icon" href="data:," />
+    <title>Kekera Pulse — Live Dashboard Demo | Kekera Inc.</title>
+    <meta name="description" content="Explore a live demo of Kekera Pulse — the client dashboard from Kekera Inc. Booked jobs, cost per lead, ROAS, calls and reviews, in plain English. Sample data." />
+    <link rel="canonical" href="https://www.kekerainc.com/pulse/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Kekera Pulse — Live Dashboard Demo" />
+    <meta property="og:description" content="Your marketing numbers in plain English: booked jobs, cost per lead, ROAS, calls and reviews. Explore the interactive demo." />
+    <meta property="og:url" content="https://www.kekerainc.com/pulse/" />
+    <meta property="og:image" content="https://www.kekerainc.com/og-image.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Kekera Pulse — Live Dashboard Demo" />
+    <meta name="twitter:description" content="Your marketing numbers in plain English. Explore the interactive demo." />
+    <meta name="twitter:image" content="https://www.kekerainc.com/og-image.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,500;1,6..72,600&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        color-scheme: light;
+        --paper: #f4efe3;
+        --paper-2: #fbf7ec;
+        --paper-3: #fffdf4;
+        --ink: #181410;
+        --ink-soft: #3d362b;
+        --muted: #6f6350;
+        --line: #d8cfb6;
+        --line-strong: #bfb294;
+        --accent: #e8490f;
+        --accent-on: #ffffff;
+        --accent-soft: rgba(232, 73, 15, 0.1);
+        --good: #1f7a44;
+        --good-bg: rgba(31, 122, 68, 0.12);
+        --warn: #96690c;
+        --warn-bg: rgba(178, 124, 16, 0.15);
+        --bad: #b3261e;
+        --bad-bg: rgba(179, 38, 30, 0.1);
+        --star: #d98a06;
+        --chart-grid: rgba(24, 20, 16, 0.13);
+        --chart-axis: #6f6350;
+        --shadow-ink: #181410;
+        --hard: 8px 8px 0 var(--shadow-ink);
+        --hard-sm: 4px 4px 0 var(--shadow-ink);
+        --focus: #e8490f;
+        --radius: 5px;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          color-scheme: dark;
+          --paper: #171410;
+          --paper-2: #201b15;
+          --paper-3: #262019;
+          --ink: #f0e7d3;
+          --ink-soft: #d3c6ab;
+          --muted: #a2937a;
+          --line: #3b332a;
+          --line-strong: #57493a;
+          --accent: #ff6a33;
+          --accent-on: #1c0d05;
+          --accent-soft: rgba(255, 106, 51, 0.14);
+          --good: #63c184;
+          --good-bg: rgba(99, 193, 132, 0.14);
+          --warn: #e5b95c;
+          --warn-bg: rgba(229, 185, 92, 0.14);
+          --bad: #ff8d80;
+          --bad-bg: rgba(255, 141, 128, 0.13);
+          --star: #f2b54d;
+          --chart-grid: rgba(240, 231, 211, 0.14);
+          --chart-axis: #a2937a;
+          --shadow-ink: #000000;
+          --focus: #ff6a33;
+        }
+      }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font-family: "Manrope", system-ui, sans-serif;
+        font-size: 16px;
+        line-height: 1.5;
+        overflow-x: hidden;
+      }
+      button, a { -webkit-tap-highlight-color: transparent; }
+      button { font: inherit; }
+      a { color: inherit; }
+      :focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-radius: 4px; }
+      h1, h2, h3, p { margin-top: 0; }
+      .serif { font-family: "Newsreader", Georgia, serif; }
+      .mono {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .sr-only {
+        position: absolute; width: 1px; height: 1px; overflow: hidden;
+        clip: rect(0 0 0 0); clip-path: inset(50%); white-space: nowrap;
+      }
+
+      /* ---------- Demo ribbon ---------- */
+      .demo-ribbon {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.4rem 0.9rem;
+        padding: 0.55rem max(1rem, calc((100vw - 1240px) / 2));
+        background: var(--ink);
+        color: var(--paper);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.76rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+      }
+      .demo-ribbon .dot {
+        flex: 0 0 auto;
+        width: 8px; height: 8px;
+        background: var(--accent);
+      }
+      .demo-ribbon .r-note { opacity: 0.72; letter-spacing: 0.04em; text-transform: none; font-size: 0.8rem; }
+
+      .page {
+        width: min(1240px, calc(100% - 32px));
+        margin: 0 auto;
+        padding: 26px 0 56px;
+      }
+
+      /* ---------- Masthead ---------- */
+      .masthead {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 18px 30px;
+        align-items: end;
+        padding-bottom: 18px;
+        border-bottom: 3px solid var(--ink);
+      }
+      .mast-kicker {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem 0.7rem;
+        margin: 0 0 10px;
+        color: var(--muted);
+      }
+      .mast-kicker .sq { width: 9px; height: 9px; background: var(--accent); flex: 0 0 auto; }
+      .chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.28rem 0.55rem;
+        border: 1.5px solid var(--ink);
+        border-radius: 3px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+        background: var(--paper-2);
+        color: var(--ink);
+      }
+      .chip.demo { background: var(--accent); border-color: var(--accent); color: var(--accent-on); }
+      .chip.sample { border-color: var(--line-strong); color: var(--muted); }
+      .biz-name {
+        margin: 0 0 6px;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+        font-weight: 600;
+        line-height: 1.02;
+        letter-spacing: -0.015em;
+      }
+      .biz-meta { margin: 0; color: var(--muted); }
+
+      .controls {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px 22px;
+        align-items: end;
+        justify-content: flex-end;
+      }
+      .ctl { display: grid; gap: 7px; }
+      .ctl-label { color: var(--muted); }
+      .segmented {
+        display: inline-flex;
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        background: var(--paper-2);
+        box-shadow: var(--hard-sm);
+        overflow: hidden;
+      }
+      .segmented button {
+        border: 0;
+        border-right: 1.5px solid var(--ink);
+        background: transparent;
+        color: var(--ink-soft);
+        padding: 0.55rem 0.85rem;
+        min-height: 46px;
+        cursor: pointer;
+        font-weight: 700;
+        font-size: 0.92rem;
+        line-height: 1.2;
+        text-align: left;
+        transition: transform 120ms ease, background 120ms ease, color 120ms ease;
+      }
+      .segmented button:last-child { border-right: 0; }
+      .segmented button small {
+        display: block;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.66rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        margin-top: 1px;
+      }
+      .segmented button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+      .segmented button[aria-pressed="true"] small { color: var(--paper); opacity: 0.72; }
+      .segmented button:active { transform: translate(2px, 2px); }
+      .period-seg button { text-align: center; }
+
+      /* ---------- Verdict ---------- */
+      .verdict-band {
+        margin-top: 22px;
+        background: var(--paper-2);
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        padding: 22px 24px 6px;
+      }
+      .verdict-top {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem 1rem;
+        margin-bottom: 12px;
+      }
+      .verdict-top .mono { color: var(--ink); display: inline-flex; align-items: center; gap: 0.55rem; }
+      .verdict-top .mono::before { content: ""; width: 9px; height: 9px; background: var(--accent); }
+      .fresh {
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+      .verdict-line {
+        margin: 0 0 18px;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(1.45rem, 3vw, 2.05rem);
+        font-weight: 600;
+        line-height: 1.22;
+        letter-spacing: -0.01em;
+        max-width: 62ch;
+      }
+      .verdict-line strong { box-shadow: inset 0 -0.42em var(--accent-soft); font-weight: 700; }
+      .watch-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        border-top: 1px solid var(--line-strong);
+      }
+      .watch-cell { padding: 14px 18px 16px 0; }
+      .watch-cell + .watch-cell { border-left: 1px solid var(--line); padding-left: 18px; }
+      .watch-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+      }
+      .watch-tag i { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+      .watch-tag.work { color: var(--good); } .watch-tag.work i { background: var(--good); }
+      .watch-tag.watch { color: var(--warn); } .watch-tag.watch i { background: var(--warn); }
+      .watch-tag.slip { color: var(--bad); } .watch-tag.slip i { background: var(--bad); }
+      .watch-cell p {
+        margin: 7px 0 0;
+        color: var(--ink-soft);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+      .watch-cell p strong { color: var(--ink); }
+
+      /* ---------- KPI band ---------- */
+      .kpi-band {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-rows: auto auto;
+        gap: 14px;
+        margin-top: 14px;
+      }
+      .hero-card {
+        grid-row: span 2;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background: var(--paper-2);
+        border: 3px solid var(--ink);
+        border-radius: var(--radius);
+        box-shadow: var(--hard);
+        padding: 26px 28px;
+      }
+      .hero-num {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(4.6rem, 9vw, 7.2rem);
+        font-weight: 600;
+        line-height: 0.95;
+        letter-spacing: -0.03em;
+        font-variant-numeric: tabular-nums;
+      }
+      .hero-label {
+        margin-top: 10px;
+        font-size: 1.3rem;
+        font-weight: 800;
+        letter-spacing: -0.01em;
+      }
+      .hero-sub {
+        margin: 6px 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.5;
+        max-width: 34ch;
+      }
+      .support-card {
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 16px 18px 14px;
+        min-width: 0;
+      }
+      .sup-num {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(2rem, 3.4vw, 2.7rem);
+        font-weight: 600;
+        line-height: 1;
+        letter-spacing: -0.02em;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .sup-num small { font-size: 0.55em; font-weight: 600; color: var(--muted); }
+      .sup-label { margin-top: 7px; font-size: 0.98rem; font-weight: 800; }
+      .sup-sub {
+        margin: 4px 0 0;
+        color: var(--muted);
+        font-size: 0.86rem;
+        font-weight: 600;
+        line-height: 1.45;
+      }
+      .delta {
+        display: inline-block;
+        margin-top: 9px;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        font-weight: 600;
+        white-space: nowrap;
+      }
+      .delta.good { color: var(--good); }
+      .delta.bad { color: var(--bad); }
+      .delta.flat { color: var(--muted); }
+      .hero-card .delta { font-size: 0.9rem; margin-top: 12px; }
+
+      /* ---------- Sections & panels ---------- */
+      .sec-head {
+        margin: 42px 0 16px;
+        padding-top: 14px;
+        border-top: 3px solid var(--ink);
+      }
+      .sec-head .kicker {
+        display: flex;
+        align-items: center;
+        gap: 0.55rem;
+        margin: 0 0 8px;
+        color: var(--muted);
+      }
+      .sec-head .kicker::before { content: ""; width: 9px; height: 9px; background: var(--accent); flex: 0 0 auto; }
+      .sec-head h2 {
+        margin: 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(1.6rem, 3.2vw, 2.2rem);
+        font-weight: 600;
+        letter-spacing: -0.015em;
+        line-height: 1.12;
+      }
+      .sec-head p {
+        max-width: 560px;
+        margin: 7px 0 0;
+        color: var(--muted);
+        font-size: 0.95rem;
+        font-weight: 600;
+        line-height: 1.55;
+      }
+      .board-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.85fr) minmax(300px, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+      .panel {
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 20px 22px;
+        min-width: 0;
+      }
+      .panel-head { margin-bottom: 14px; }
+      .panel-head h3 {
+        margin: 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 1.4rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+        line-height: 1.2;
+      }
+      .panel-head p {
+        max-width: 52ch;
+        margin: 5px 0 0;
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.5;
+      }
+      .panel-head .chip { margin-top: 10px; }
+
+      .metric-tabs {
+        display: inline-flex;
+        flex-wrap: wrap;
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        background: var(--paper);
+        box-shadow: var(--hard-sm);
+        overflow: hidden;
+        margin-bottom: 16px;
+      }
+      .metric-tabs button {
+        border: 0;
+        border-right: 1.5px solid var(--ink);
+        background: transparent;
+        color: var(--ink-soft);
+        padding: 0.55rem 0.9rem;
+        min-height: 44px;
+        cursor: pointer;
+        font-size: 0.88rem;
+        font-weight: 700;
+        transition: transform 120ms ease, background 120ms ease, color 120ms ease;
+      }
+      .metric-tabs button:last-child { border-right: 0; }
+      .metric-tabs button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+      .metric-tabs button:active { transform: translate(2px, 2px); }
+
+      .chart-wrap {
+        position: relative;
+        border: 1px solid var(--line);
+        border-radius: 4px;
+        background: var(--paper-3);
+        padding: 10px 8px 4px;
+      }
+      .chart-wrap svg { display: block; width: 100%; height: auto; overflow: visible; }
+      .chart-tooltip {
+        position: absolute;
+        z-index: 5;
+        min-width: 148px;
+        max-width: 210px;
+        padding: 10px 12px;
+        border-radius: 4px;
+        background: var(--ink);
+        color: var(--paper);
+        box-shadow: var(--hard-sm);
+        font-size: 0.82rem;
+        font-weight: 600;
+        line-height: 1.5;
+        pointer-events: none;
+        opacity: 0;
+        transform: translate(-50%, calc(-100% - 14px));
+        transition: opacity 120ms ease;
+      }
+      .chart-tooltip.visible { opacity: 1; }
+      .chart-tooltip strong { display: block; font-family: "Newsreader", Georgia, serif; font-size: 0.95rem; }
+      .chart-tooltip span { opacity: 0.75; }
+      .chart-foot {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin-top: 14px;
+      }
+      .chart-foot .fact {
+        border-top: 2px solid var(--ink);
+        padding-top: 9px;
+      }
+      .chart-foot .fact span {
+        display: block;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+      }
+      .chart-foot .fact strong { display: block; margin-top: 4px; font-size: 0.95rem; line-height: 1.3; }
+
+      /* ---------- Funnel ---------- */
+      .funnel {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr auto 1fr auto 1fr;
+        gap: 10px;
+        align-items: stretch;
+        margin-top: 14px;
+      }
+      .stage {
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+      }
+      .stage .s-num {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 2rem;
+        font-weight: 600;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .stage .s-label { margin-top: 6px; color: var(--muted); }
+      .stage-arrow {
+        align-self: center;
+        text-align: center;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+        line-height: 1.4;
+      }
+      .stage-arrow b { display: block; color: var(--accent); font-size: 1rem; }
+
+      /* ---------- Channel bars ---------- */
+      .chan-verdict {
+        margin: 0 0 16px;
+        font-family: "Newsreader", Georgia, serif;
+        font-style: italic;
+        font-size: 1.08rem;
+        font-weight: 500;
+        line-height: 1.45;
+        color: var(--ink-soft);
+      }
+      .chan-verdict strong { color: var(--ink); font-weight: 700; font-style: normal; }
+      .chan-list { display: grid; gap: 15px; }
+      .chan-row { display: grid; gap: 6px; }
+      .chan-top {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .chan-name { font-size: 0.95rem; font-weight: 800; line-height: 1.25; }
+      .chan-name span {
+        display: block;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        margin-top: 2px;
+        letter-spacing: 0.03em;
+        text-transform: none;
+      }
+      .chan-value {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.85rem;
+        font-weight: 600;
+        white-space: nowrap;
+        font-variant-numeric: tabular-nums;
+      }
+      .chan-track {
+        height: 16px;
+        background: var(--accent-soft);
+        border: 1px solid var(--line);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .chan-fill { height: 100%; background: var(--ink); }
+      .chan-row:first-child .chan-fill { background: var(--accent); }
+
+      /* ---------- Reputation ---------- */
+      .rep-grid {
+        display: grid;
+        grid-template-columns: minmax(220px, 0.9fr) minmax(240px, 1fr) minmax(280px, 1.3fr);
+        gap: 0;
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .rep-cell { padding: 22px; min-width: 0; }
+      .rep-cell + .rep-cell { border-left: 1px solid var(--line); }
+      .rep-score {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 4.6rem;
+        font-weight: 600;
+        line-height: 0.95;
+        letter-spacing: -0.02em;
+      }
+      .rep-stars { color: var(--star); font-size: 1.25rem; letter-spacing: 0.16em; margin-top: 8px; }
+      .rep-count {
+        margin-top: 6px;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.78rem;
+        font-weight: 600;
+      }
+      .rep-note { margin: 12px 0 0; color: var(--ink-soft); font-size: 0.92rem; font-weight: 600; line-height: 1.55; }
+      .rep-link {
+        display: inline-block;
+        margin-top: 12px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        text-decoration: underline;
+        text-decoration-color: var(--accent);
+        text-decoration-thickness: 2px;
+        text-underline-offset: 4px;
+      }
+      .growth-num {
+        font-family: "Newsreader", Georgia, serif;
+        font-size: 2.4rem;
+        font-weight: 600;
+        line-height: 1;
+        font-variant-numeric: tabular-nums;
+      }
+      .growth-spark { margin-top: 12px; }
+      .growth-spark svg { display: block; width: 100%; height: 44px; overflow: visible; }
+      .sentiment { margin: 14px 0 0; color: var(--ink-soft); font-size: 0.92rem; font-weight: 600; line-height: 1.55; }
+      .sentiment .mono { display: block; color: var(--muted); margin-bottom: 5px; }
+      .review-quote {
+        margin: 0 0 14px;
+        padding-left: 14px;
+        border-left: 3px solid var(--ink);
+      }
+      .review-quote:last-child { margin-bottom: 0; }
+      .review-quote p {
+        margin: 0;
+        font-family: "Newsreader", Georgia, serif;
+        font-style: italic;
+        font-size: 1.02rem;
+        font-weight: 500;
+        line-height: 1.45;
+      }
+      .review-quote footer {
+        margin-top: 5px;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.72rem;
+        font-weight: 600;
+      }
+      .review-quote footer .q-stars { color: var(--star); letter-spacing: 0.1em; }
+
+      /* ---------- Detail layer ---------- */
+      .lower-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.45fr) minmax(300px, 1fr);
+        gap: 14px;
+        align-items: start;
+      }
+      .camp-table { width: 100%; border-collapse: collapse; }
+      .camp-table caption { text-align: left; padding-bottom: 10px; }
+      .camp-table th {
+        text-align: left;
+        color: var(--muted);
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.68rem;
+        font-weight: 600;
+        letter-spacing: 0.11em;
+        text-transform: uppercase;
+        padding: 0 10px 9px 0;
+        border-bottom: 2px solid var(--ink);
+      }
+      .camp-table th.num, .camp-table td.num { text-align: right; }
+      .camp-table td {
+        padding: 11px 10px 11px 0;
+        border-bottom: 1px solid var(--line);
+        font-weight: 700;
+        font-size: 0.94rem;
+        font-variant-numeric: tabular-nums;
+        vertical-align: top;
+      }
+      .camp-table td.num { font-family: "IBM Plex Mono", monospace; font-weight: 600; font-size: 0.88rem; }
+      .camp-table tr:last-child td { border-bottom: 0; }
+      .camp-name span {
+        display: block;
+        color: var(--muted);
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-top: 2px;
+      }
+      .status {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.7rem;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+      .status i { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+      .status.scaling { color: var(--good); } .status.scaling i { background: var(--good); }
+      .status.steady { color: var(--muted); } .status.steady i { background: var(--muted); }
+      .status.watching { color: var(--warn); } .status.watching i { background: var(--warn); }
+      .status.booked { color: var(--good); } .status.booked i { background: var(--good); }
+      .status.callback { color: var(--warn); } .status.callback i { background: var(--warn); }
+      .status.estimate { color: var(--ink-soft); } .status.estimate i { background: var(--accent); }
+
+      .call-list { display: grid; }
+      .call-row {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: start;
+        padding: 12px 0;
+        border-bottom: 1px solid var(--line);
+      }
+      .call-row:last-child { border-bottom: 0; padding-bottom: 2px; }
+      .call-time {
+        font-family: "IBM Plex Mono", monospace;
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--ink-soft);
+        white-space: nowrap;
+        padding-top: 2px;
+      }
+      .call-time span { display: block; color: var(--muted); font-size: 0.68rem; margin-top: 1px; }
+      .call-main strong { display: block; font-size: 0.97rem; font-weight: 750; line-height: 1.3; }
+      .call-main p { margin: 3px 0 0; color: var(--muted); font-size: 0.86rem; font-weight: 600; line-height: 1.45; }
+
+      .work-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 0;
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-radius: var(--radius);
+        overflow: hidden;
+      }
+      .work-item { padding: 18px 20px; min-width: 0; }
+      .work-item + .work-item { border-left: 1px solid var(--line); }
+      .work-item .mono { color: var(--accent); }
+      .work-item h3 { margin: 9px 0 6px; font-size: 1rem; font-weight: 800; line-height: 1.3; }
+      .work-item p { margin: 0; color: var(--muted); font-size: 0.9rem; font-weight: 600; line-height: 1.55; }
+      .next-line {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 0.4rem 0.8rem;
+        margin-top: 14px;
+        padding: 15px 18px;
+        background: var(--paper-2);
+        border: 1px solid var(--line-strong);
+        border-left: 5px solid var(--accent);
+        border-radius: var(--radius);
+      }
+      .next-line .mono { color: var(--accent); }
+      .next-line p { margin: 0; font-size: 0.98rem; font-weight: 700; line-height: 1.5; }
+
+      /* ---------- CTA ---------- */
+      .cta-band {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 18px 30px;
+        margin-top: 42px;
+        padding: 26px 28px;
+        background: var(--ink);
+        color: var(--paper);
+        border-radius: var(--radius);
+      }
+      .cta-band h2 {
+        margin: 0 0 6px;
+        font-family: "Newsreader", Georgia, serif;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 600;
+        line-height: 1.15;
+        letter-spacing: -0.01em;
+      }
+      .cta-band p { margin: 0; opacity: 0.75; font-weight: 600; line-height: 1.55; max-width: 52ch; }
+      .cta-text { flex: 1 1 340px; }
+      .cta-btn {
+        flex: 0 0 auto;
+        display: inline-block;
+        background: var(--accent);
+        color: var(--accent-on);
+        border: 2px solid var(--paper);
+        border-radius: var(--radius);
+        box-shadow: 5px 5px 0 rgba(244, 239, 227, 0.9);
+        padding: 0.85rem 1.3rem;
+        font-weight: 800;
+        font-size: 1rem;
+        text-decoration: none;
+        transition: transform 130ms ease, box-shadow 130ms ease;
+      }
+      @media (prefers-color-scheme: dark) {
+        .cta-btn { box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.85); border-color: var(--ink); }
+      }
+      .cta-btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 rgba(244, 239, 227, 0.9); }
+
+      /* ---------- Footer ---------- */
+      .footer {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 26px;
+        margin-top: 40px;
+        padding-top: 20px;
+        border-top: 2px solid var(--ink);
+        color: var(--muted);
+        font-size: 0.9rem;
+        font-weight: 600;
+        line-height: 1.6;
+      }
+      .footer strong { color: var(--ink); }
+      .footer .mono { display: block; color: var(--muted); margin-bottom: 7px; }
+      .footer a { color: var(--ink-soft); text-decoration-thickness: 2px; text-underline-offset: 3px; }
+      .footer ul { margin: 0.4rem 0 0; padding-left: 1.1rem; }
+
+      .noscript {
+        margin-bottom: 16px;
+        padding: 14px 16px;
+        border: 2px solid var(--ink);
+        border-radius: var(--radius);
+        background: var(--paper-2);
+        font-weight: 700;
+      }
+
+      @media (max-width: 1080px) {
+        .board-grid, .lower-grid { grid-template-columns: 1fr; }
+        .rep-grid { grid-template-columns: 1fr 1fr; }
+        .rep-cell:last-child { grid-column: span 2; border-left: 0; border-top: 1px solid var(--line); }
+        .work-grid { grid-template-columns: 1fr 1fr; }
+        .work-item:nth-child(3) { border-left: 0; }
+        .work-item:nth-child(n + 3) { border-top: 1px solid var(--line); }
+      }
+      @media (max-width: 920px) {
+        .masthead { grid-template-columns: 1fr; align-items: start; }
+        .controls { justify-content: flex-start; }
+        .watch-grid { grid-template-columns: 1fr; }
+        .watch-cell { padding: 13px 0 14px; }
+        .watch-cell + .watch-cell { border-left: 0; border-top: 1px solid var(--line); padding-left: 0; }
+        .kpi-band { grid-template-columns: 1fr 1fr; }
+        .hero-card { grid-column: span 2; grid-row: auto; }
+        .funnel { grid-template-columns: 1fr 1fr; }
+        .stage-arrow { display: none; }
+      }
+      @media (max-width: 680px) {
+        .page { width: min(100% - 20px, 1240px); padding-top: 18px; }
+        .demo-ribbon { padding-inline: 10px; }
+        .verdict-band { padding: 18px 16px 4px; }
+        .kpi-band { grid-template-columns: 1fr; }
+        .hero-card { grid-column: auto; padding: 22px; }
+        .hero-num { font-size: 4.4rem; }
+        .chart-foot { grid-template-columns: 1fr; }
+        .rep-grid { grid-template-columns: 1fr; }
+        .rep-cell { padding: 18px; }
+        .rep-cell + .rep-cell { border-left: 0; border-top: 1px solid var(--line); }
+        .rep-cell:last-child { grid-column: auto; }
+        .work-grid { grid-template-columns: 1fr; }
+        .work-item + .work-item { border-left: 0; border-top: 1px solid var(--line); }
+        .work-item:nth-child(n + 3) { border-top: 1px solid var(--line); }
+        .segmented { max-width: 100%; }
+        .segmented button { flex: 1 1 auto; }
+        .ctl { width: 100%; }
+        .ctl .segmented { width: 100%; }
+        .controls { width: 100%; }
+        .camp-table thead { display: none; }
+        .camp-table, .camp-table tbody, .camp-table tr, .camp-table td { display: block; width: 100%; }
+        .camp-table tr { border: 1px solid var(--line-strong); border-radius: var(--radius); padding: 8px 14px; margin-bottom: 10px; background: var(--paper-3); }
+        .camp-table td {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 1rem;
+          padding: 7px 0;
+          border-bottom: 1px solid var(--line);
+          text-align: right;
+        }
+        .camp-table td:last-child { border-bottom: 0; }
+        .camp-table td::before {
+          content: attr(data-label);
+          color: var(--muted);
+          font-family: "IBM Plex Mono", monospace;
+          font-size: 0.68rem;
+          font-weight: 600;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          text-align: left;
+        }
+        .camp-table td.camp-name { display: block; text-align: left; }
+        .camp-table td.camp-name::before { display: block; margin-bottom: 3px; }
+        .call-row { grid-template-columns: 50px minmax(0, 1fr); }
+        .call-row .status { grid-column: 2; justify-self: start; }
+        .cta-band { padding: 22px; }
+        .cta-btn { width: 100%; text-align: center; }
+        .footer { grid-template-columns: 1fr; }
+        .panel { padding: 16px; }
+        .funnel { grid-template-columns: 1fr 1fr; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          scroll-behavior: auto !important;
+          transition-duration: 0.01ms !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-ribbon" role="note" aria-label="Sample data notice">
+      <span class="dot" aria-hidden="true"></span>
+      <span>Demo dashboard</span>
+      <span class="r-note">Performance figures are sample data · Google ratings are real snapshots · Not a live client account</span>
+    </div>
+
+    <main class="page">
+      <noscript><div class="noscript">This interactive demo needs JavaScript to switch demo businesses and redraw the sample charts.</div></noscript>
+
+      <header class="masthead">
+        <div>
+          <p class="mast-kicker mono"><span class="sq" aria-hidden="true"></span> Kekera Pulse · Client dashboard demo
+            <span class="chip demo">Demo</span><span class="chip sample">Sample data</span>
+          </p>
+          <h1 class="biz-name" id="bizName">PJ MAC HVAC Service &amp; Repair</h1>
+          <p class="biz-meta mono" id="bizMeta">HVAC service &amp; repair · Reading, PA · Snapshot checked Oct 1, 2026</p>
+        </div>
+        <div class="controls" aria-label="Dashboard controls">
+          <div class="ctl">
+            <span class="ctl-label mono" id="clientLabel">Business</span>
+            <div class="segmented" role="group" aria-labelledby="clientLabel">
+              <button class="client-btn" type="button" data-client="hvac" aria-pressed="true">PJ MAC HVAC<small>Reading · HVAC</small></button>
+              <button class="client-btn" type="button" data-client="dental" aria-pressed="false">American Dental<small>Wyomissing · Dental</small></button>
+            </div>
+          </div>
+          <div class="ctl">
+            <span class="ctl-label mono" id="periodLabel">Window</span>
+            <div class="segmented period-seg" role="group" aria-labelledby="periodLabel">
+              <button class="period-btn" type="button" data-period="7" aria-pressed="false">7 days</button>
+              <button class="period-btn" type="button" data-period="30" aria-pressed="true">30 days</button>
+              <button class="period-btn" type="button" data-period="90" aria-pressed="false">90 days</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <section class="verdict-band" aria-labelledby="verdict-title">
+        <div class="verdict-top">
+          <span class="mono" id="verdictRange">The verdict · Last 30 days</span>
+          <span class="fresh">Sample snapshot · Checked Oct 1, 2026</span>
+        </div>
+        <h2 class="sr-only" id="verdict-title">Verdict for the selected window</h2>
+        <p class="verdict-line" id="verdictText">—</p>
+        <div class="watch-grid">
+          <div class="watch-cell">
+            <span class="watch-tag work"><i aria-hidden="true"></i> Working</span>
+            <p id="watchWorking">—</p>
+          </div>
+          <div class="watch-cell">
+            <span class="watch-tag watch"><i aria-hidden="true"></i> Watching</span>
+            <p id="watchWatching">—</p>
+          </div>
+          <div class="watch-cell">
+            <span class="watch-tag slip"><i aria-hidden="true"></i> Slipping</span>
+            <p id="watchSlipping">—</p>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="kpi-title">
+        <h2 class="sr-only" id="kpi-title">Key numbers</h2>
+        <div class="kpi-band" aria-live="polite">
+          <article class="hero-card">
+            <div class="hero-num" id="bookedValue">—</div>
+            <div class="hero-label">Booked jobs</div>
+            <span class="delta good" id="bookedDelta">—</span>
+            <p class="hero-sub">Jobs and appointments on the calendar that marketing put there. This is the number the whole board answers to.</p>
+          </article>
+
+          <article class="support-card">
+            <div class="sup-num" id="answeredValue">—</div>
+            <div class="sup-label">Calls answered</div>
+            <span class="delta good" id="answeredDelta">—</span>
+            <p class="sup-sub" id="missedSub">—</p>
+          </article>
+
+          <article class="support-card">
+            <div class="sup-num" id="cplValue">—</div>
+            <div class="sup-label">Cost per lead</div>
+            <span class="delta good" id="cplDelta">—</span>
+            <p class="sup-sub">Ad spend divided by qualified leads. Lower is better.</p>
+          </article>
+
+          <article class="support-card">
+            <div class="sup-num" id="spendValue">—</div>
+            <div class="sup-label">Ad spend</div>
+            <span class="delta flat" id="spendDelta">—</span>
+            <p class="sup-sub">Across Google and Meta in this window.</p>
+          </article>
+
+          <article class="support-card">
+            <div class="sup-num" id="roasValue">—</div>
+            <div class="sup-label">Revenue back per $1 of ads</div>
+            <span class="delta good" id="roasDelta">—</span>
+            <p class="sup-sub">Paid-source revenue returned for every ad dollar spent.</p>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="trend-title">
+        <div class="sec-head">
+          <p class="kicker mono">Trend</p>
+          <h2 id="trend-title">Where it’s heading</h2>
+          <p>The trend line and the revenue mix. Everything else on this page is supporting evidence for these two pictures.</p>
+        </div>
+
+        <div class="board-grid">
+          <article class="panel" aria-labelledby="chart-title">
+            <div class="panel-head">
+              <h3 id="chartTitle">Performance trend</h3>
+              <p id="chartSubtitle">Sample figures for the selected business and window.</p>
+              <span class="chip sample">Sample data</span>
+            </div>
+            <div class="metric-tabs" role="group" aria-label="Chart metric">
+              <button class="metric-btn" type="button" data-metric="leads" aria-pressed="true">Lead flow</button>
+              <button class="metric-btn" type="button" data-metric="revenue" aria-pressed="false">Revenue</button>
+              <button class="metric-btn" type="button" data-metric="cpl" aria-pressed="false">Cost / lead</button>
+              <button class="metric-btn" type="button" data-metric="roas" aria-pressed="false">Revenue per $1</button>
+            </div>
+            <div class="chart-wrap" id="chartWrap">
+              <svg id="mainChart" viewBox="0 0 920 380" role="img" aria-label="Sample marketing performance chart"></svg>
+              <div class="chart-tooltip" id="chartTooltip" role="status"></div>
+            </div>
+            <div class="chart-foot">
+              <div class="fact"><span>Peak interval</span><strong id="peakInsight">—</strong></div>
+              <div class="fact"><span>Latest interval</span><strong id="latestInsight">—</strong></div>
+              <div class="fact"><span>Intervals shown</span><strong id="countInsight">—</strong></div>
+            </div>
+          </article>
+
+          <article class="panel" aria-labelledby="channel-title">
+            <div class="panel-head">
+              <h3 id="channel-title">Where the money came from</h3>
+              <span class="chip sample">Sample mix</span>
+            </div>
+            <p class="chan-verdict" id="channelVerdict">—</p>
+            <div class="chan-list" id="channelBars"></div>
+          </article>
+        </div>
+
+        <div class="funnel" aria-label="How calls become customers (sample)">
+          <div class="stage"><div class="s-num" id="fRang">—</div><div class="s-label mono">Calls rang</div></div>
+          <div class="stage-arrow"><b aria-hidden="true">→</b><span id="fP1">—</span></div>
+          <div class="stage"><div class="s-num" id="fConv">—</div><div class="s-label mono">Real conversations</div></div>
+          <div class="stage-arrow"><b aria-hidden="true">→</b><span id="fP2">—</span></div>
+          <div class="stage"><div class="s-num" id="fBooked">—</div><div class="s-label mono">Booked jobs</div></div>
+          <div class="stage-arrow"><b aria-hidden="true">→</b><span id="fP3">—</span></div>
+          <div class="stage"><div class="s-num" id="fCust">—</div><div class="s-label mono">Became customers</div></div>
+        </div>
+      </section>
+
+      <section aria-labelledby="rep-title">
+        <div class="sec-head">
+          <p class="kicker mono">Reputation</p>
+          <h2 id="rep-title">What Google says about them</h2>
+          <p>The rating and review count are a real public snapshot. The growth line and review quotes are sample illustrations.</p>
+        </div>
+
+        <div class="rep-grid">
+          <div class="rep-cell">
+            <span class="mono" style="color: var(--muted);">Google rating · Real snapshot</span>
+            <div class="rep-score" id="repRating">5.0</div>
+            <div class="rep-stars" id="repStars" aria-label="5.0 star rating">★★★★★</div>
+            <div class="rep-count" id="repReviews">176 Google reviews</div>
+            <p class="rep-note">Checked Oct 1, 2026 against the public listing. Ratings move slowly — that’s the point of tracking them.</p>
+            <a class="rep-link" id="repSource" href="http://pjmachvac.com/washington-st-reading-hvac-service" target="_blank" rel="noopener">View the public source</a>
+          </div>
+          <div class="rep-cell">
+            <span class="mono" style="color: var(--muted);">New reviews · <span id="growthWindow">Last 30 days</span></span>
+            <div class="growth-num" id="growthNum">—</div>
+            <div class="growth-spark" id="growthSpark"></div>
+            <p class="sentiment"><span class="mono">Customers mention most</span><span id="sentimentText">—</span></p>
+          </div>
+          <div class="rep-cell">
+            <span class="mono" style="color: var(--muted);">Recent reviews · Sample quotes</span>
+            <div id="reviewQuotes" style="margin-top: 14px;"></div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="detail-title">
+        <div class="sec-head">
+          <p class="kicker mono">The receipts</p>
+          <h2 id="detail-title">Proof, in tables</h2>
+          <p>Exact numbers belong in tables, not charts. Campaigns on the left, the latest inquiries on the right.</p>
+        </div>
+
+        <div class="lower-grid">
+          <article class="panel" aria-labelledby="camp-title">
+            <div class="panel-head">
+              <h3 id="camp-title">Top campaigns</h3>
+              <p>The campaigns doing the work this window. Cost per lead is spend divided by leads — the math always checks.</p>
+              <span class="chip sample">Sample data</span>
+            </div>
+            <table class="camp-table">
+              <thead>
+                <tr><th scope="col">Campaign</th><th scope="col" class="num">Spend</th><th scope="col" class="num">Leads</th><th scope="col" class="num">Cost / lead</th><th scope="col">Status</th></tr>
+              </thead>
+              <tbody id="campBody"></tbody>
+            </table>
+          </article>
+
+          <article class="panel" aria-labelledby="calls-title">
+            <div class="panel-head">
+              <h3 id="calls-title">Latest inquiries</h3>
+              <p>Illustrative entries. In a live account, tracked calls, forms, and chats land here with their outcomes.</p>
+              <span class="chip sample">Sample log</span>
+            </div>
+            <div class="call-list" id="callList"></div>
+          </article>
+        </div>
+      </section>
+
+      <section aria-labelledby="work-title">
+        <div class="sec-head">
+          <p class="kicker mono">Accountability</p>
+          <h2 id="work-title">What Kekera did this month</h2>
+          <p>A report that only lists numbers is half a report. This is the other half: the work behind the movement, and what happens next.</p>
+        </div>
+
+        <div class="work-grid" id="workGrid"></div>
+        <div class="next-line">
+          <span class="mono">Up next</span>
+          <p id="nextText">—</p>
+        </div>
+      </section>
+
+      <section class="cta-band" aria-labelledby="cta-title">
+        <div class="cta-text">
+          <h2 id="cta-title">Want numbers like these for your own business?</h2>
+          <p>The Kekera Growth Review scores your SEO, Google profile, paid ads, website, and social from 1–10 — a 5-page report and a 3-minute video within 24 hours. Free.</p>
+        </div>
+        <a class="cta-btn" href="https://www.kekerainc.com/" target="_blank" rel="noopener">Get my free Kekera Growth Review</a>
+      </section>
+
+      <footer class="footer">
+        <div>
+          <span class="mono">Data honesty note</span>
+          All leads, spend, revenue, calls, trends, channel mixes, campaigns, and call-log entries on this page are sample data for a design draft. They are not PJ MAC HVAC or American Dental Solutions performance records.
+          <br /><br />
+          <strong>Where Pulse lives:</strong> this public demo sells the product on kekerainc.com; the real Pulse is a private client portal behind a login; a short daily Pulse check keeps owners opening it.
+        </div>
+        <div>
+          <span class="mono">Real public snapshot used</span>
+          Business name, category, market, Google rating, and Google review count — checked Oct 1, 2026.
+          <ul>
+            <li><a href="http://pjmachvac.com/washington-st-reading-hvac-service" target="_blank" rel="noopener">PJ MAC HVAC Service &amp; Repair — public site</a></li>
+            <li><a href="https://americandentalsolutions.net/office-info/wyomissing/" target="_blank" rel="noopener">American Dental Solutions — Wyomissing office page</a></li>
+          </ul>
+        </div>
+      </footer>
+    </main>
+
+    <script>
+      (function () {
+        "use strict";
+
+        function cssVar(name) {
+          return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+        }
+        var state = { client: "hvac", period: "30", metric: "leads" };
+
+        function tuplePoints(labels, rows) {
+          return labels.map(function (label, i) {
+            return { label: label, leads: rows[i][0], spend: rows[i][1], revenue: rows[i][2], calls: rows[i][3] };
+          });
+        }
+
+        var CLIENTS = {
+          hvac: {
+            business: "PJ MAC HVAC Service & Repair",
+            category: "HVAC service & repair",
+            location: "Reading, PA",
+            rating: "5.0",
+            stars: "★★★★★",
+            reviews: 176,
+            sourceUrl: "http://pjmachvac.com/washington-st-reading-hvac-service",
+            sentiment: "Fast response, fair pricing, and techs who explain the fix before they start.",
+            periods: {
+              "7": {
+                previous: { leads: 36, spend: 1980, revenue: 10300, calls: 27, answered: 36, missed: 6 },
+                answered: 40, missed: 4, conv: 36, cust: 28, revNew: 3, revSeries: [173, 174, 175, 175, 176, 176],
+                points: tuplePoints(["Sep 25", "Sep 26", "Sep 27", "Sep 28", "Sep 29", "Sep 30", "Oct 1"], [
+                  [5, 255, 1420, 4], [6, 290, 1710, 5], [7, 335, 2050, 5], [5, 248, 1330, 4], [8, 390, 2420, 6], [6, 305, 1760, 5], [4, 225, 1160, 3]
+                ])
+              },
+              "30": {
+                previous: { leads: 141, spend: 7920, revenue: 42600, calls: 113, answered: 141, missed: 17 },
+                answered: 158, missed: 13, conv: 139, cust: 112, revNew: 12, revSeries: [164, 167, 169, 171, 173, 174, 176],
+                points: tuplePoints(["Sep 2", "Sep 5", "Sep 8", "Sep 11", "Sep 14", "Sep 17", "Sep 20", "Sep 23", "Sep 26", "Sep 29"], [
+                  [14, 735, 4250, 11], [16, 820, 4890, 13], [15, 760, 4380, 12], [17, 880, 5260, 14], [14, 715, 4020, 11], [18, 910, 5590, 15], [16, 835, 4760, 13], [15, 780, 4410, 12], [17, 875, 5180, 14], [16, 840, 4920, 13]
+                ])
+              },
+              "90": {
+                previous: { leads: 452, spend: 24850, revenue: 132900, calls: 359, answered: 428, missed: 49 },
+                answered: 472, missed: 40, conv: 431, cust: 356, revNew: 34, revSeries: [142, 149, 154, 158, 163, 167, 171, 174, 176],
+                points: tuplePoints(["Jul 6", "Jul 13", "Jul 20", "Jul 27", "Aug 3", "Aug 10", "Aug 17", "Aug 24", "Aug 31", "Sep 7", "Sep 14", "Sep 21"], [
+                  [36, 1880, 10850, 29], [39, 2010, 11620, 31], [38, 1960, 11240, 30], [41, 2110, 12380, 33], [40, 2050, 11960, 32], [43, 2190, 12940, 35], [42, 2140, 12510, 34], [44, 2260, 13280, 36], [41, 2090, 12190, 33], [45, 2310, 13640, 37], [43, 2200, 12890, 35], [46, 2360, 13950, 37]
+                ])
+              }
+            },
+            sources: [
+              { name: "Google Search Ads", revenueShare: 39, leadShare: 36, paid: true },
+              { name: "Google Business Profile", revenueShare: 24, leadShare: 28 },
+              { name: "Meta Ads", revenueShare: 15, leadShare: 14, paid: true },
+              { name: "Website / organic search", revenueShare: 14, leadShare: 15 },
+              { name: "Referrals & repeat customers", revenueShare: 8, leadShare: 7 }
+            ],
+            campaigns: [
+              { name: "No-heat emergency — Google Search", sub: "Furnace & heating repair terms", spend: 3120, leads: 58, status: "Scaling", statusClass: "scaling" },
+              { name: "AC install & replacement — Google Search", sub: "Replacement quotes", spend: 2240, leads: 34, status: "Steady", statusClass: "steady" },
+              { name: "Tune-up special — Meta", sub: "Seasonal maintenance offer", spend: 1180, leads: 29, status: "Steady", statusClass: "steady" },
+              { name: "Duct cleaning — Google Search", sub: "Add-on service", spend: 640, leads: 9, status: "Watching", statusClass: "watching" }
+            ],
+            calls: [
+              { time: "9:12", suffix: "AM", title: "No-heat call — furnace will not start", meta: "Google Search Ads · 6m 42s · Service visit booked", status: "Booked", statusClass: "booked" },
+              { time: "10:04", suffix: "AM", title: "AC replacement estimate", meta: "Google Business Profile call · 4m 18s · Estimate booked", status: "Booked", statusClass: "booked" },
+              { time: "12:37", suffix: "PM", title: "Mini-split quote for a finished basement", meta: "Meta Ads · 5m 03s · Estimate booked", status: "Estimate", statusClass: "estimate" },
+              { time: "2:18", suffix: "PM", title: "Water heater making noise", meta: "Website form · Callback requested", status: "Callback", statusClass: "callback" },
+              { time: "4:46", suffix: "PM", title: "Annual tune-up and filter plan", meta: "Organic search · 3m 27s · Maintenance booked", status: "Booked", statusClass: "booked" }
+            ],
+            quotes: [
+              { stars: "★★★★★", text: "Furnace quit on the coldest night of the year. They had the heat back on before dinner.", who: "Mark T. · Reading · 2 weeks ago" },
+              { stars: "★★★★★", text: "Quoted less than two other companies — and explained every line of the bill.", who: "Denise R. · Reading · 1 month ago" },
+              { stars: "★★★★★", text: "The tech showed up when he said he would. That alone earns five stars.", who: "Carlos M. · Sinking Spring · 1 month ago" }
+            ],
+            work: [
+              { tag: "Ads", title: "Rebuilt the no-heat ads around emergency searches", detail: "New copy went live mid-September; cost per lead has fallen every interval since." },
+              { tag: "Tracking", title: "Added tracked numbers to the Google profile", detail: "Every call from the profile now lands in this dashboard with its outcome attached." },
+              { tag: "Reviews", title: "Asked happy customers for reviews", detail: "Review requests went out after every completed job — the rating held at 5.0." },
+              { tag: "Budget", title: "Trimmed Meta ads to the service area", detail: "Spend moved out of the zip codes that browse but never book." }
+            ],
+            next: "A pre-season tune-up offer before the first cold snap — historically the cheapest booked jobs of the year."
+          },
+          dental: {
+            business: "American Dental Solutions",
+            category: "Dentist & dental office",
+            location: "Wyomissing, PA",
+            rating: "4.4",
+            stars: "★★★★☆",
+            reviews: 93,
+            sourceUrl: "https://americandentalsolutions.net/office-info/wyomissing/",
+            sentiment: "Gentle with nervous patients, clear prices, and booking that doesn’t take three phone calls.",
+            periods: {
+              "7": {
+                previous: { leads: 21, spend: 1510, revenue: 8460, calls: 16, answered: 21, missed: 3 },
+                answered: 23, missed: 2, conv: 20, cust: 16, revNew: 2, revSeries: [91, 92, 92, 93, 93],
+                points: tuplePoints(["Sep 25", "Sep 26", "Sep 27", "Sep 28", "Sep 29", "Sep 30", "Oct 1"], [
+                  [3, 205, 1180, 2], [4, 260, 1510, 3], [3, 215, 1240, 2], [4, 275, 1690, 3], [3, 220, 1290, 3], [4, 255, 1480, 3], [3, 210, 1210, 2]
+                ])
+              },
+              "30": {
+                previous: { leads: 88, spend: 6240, revenue: 34100, calls: 70, answered: 86, missed: 11 },
+                answered: 96, missed: 8, conv: 88, cust: 71, revNew: 8, revSeries: [85, 87, 88, 90, 91, 92, 93],
+                points: tuplePoints(["Sep 2", "Sep 5", "Sep 8", "Sep 11", "Sep 14", "Sep 17", "Sep 20", "Sep 23", "Sep 26", "Sep 29"], [
+                  [9, 610, 3480, 7], [10, 665, 3820, 8], [9, 620, 3510, 7], [11, 720, 4210, 9], [10, 675, 3890, 8], [11, 735, 4280, 9], [10, 660, 3760, 8], [9, 615, 3540, 7], [11, 725, 4190, 9], [10, 680, 3920, 8]
+                ])
+              },
+              "90": {
+                previous: { leads: 292, spend: 20680, revenue: 114300, calls: 238, answered: 289, missed: 34 },
+                answered: 316, missed: 26, conv: 291, cust: 238, revNew: 21, revSeries: [72, 76, 79, 82, 85, 87, 89, 91, 92, 93],
+                points: tuplePoints(["Jul 6", "Jul 13", "Jul 20", "Jul 27", "Aug 3", "Aug 10", "Aug 17", "Aug 24", "Aug 31", "Sep 7", "Sep 14", "Sep 21"], [
+                  [24, 1620, 9360, 19], [26, 1740, 10120, 21], [25, 1680, 9720, 20], [27, 1810, 10540, 22], [28, 1880, 10980, 23], [26, 1750, 10190, 21], [29, 1940, 11360, 24], [27, 1820, 10630, 22], [30, 2010, 11780, 25], [28, 1890, 11020, 23], [31, 2070, 12140, 26], [29, 1950, 11390, 24]
+                ])
+              }
+            },
+            sources: [
+              { name: "Google Search Ads", revenueShare: 34, leadShare: 31, paid: true },
+              { name: "Google Business Profile", revenueShare: 26, leadShare: 29 },
+              { name: "Website / organic search", revenueShare: 18, leadShare: 19 },
+              { name: "Meta Ads", revenueShare: 12, leadShare: 11, paid: true },
+              { name: "Referrals", revenueShare: 10, leadShare: 10 }
+            ],
+            campaigns: [
+              { name: "Implant consults — Google Search", sub: "High-value treatment terms", spend: 2780, leads: 41, status: "Scaling", statusClass: "scaling" },
+              { name: "New patient cleaning — Google Search", sub: "First-visit offer", spend: 1760, leads: 38, status: "Steady", statusClass: "steady" },
+              { name: "Invisalign — Meta", sub: "Adult orthodontics", spend: 1140, leads: 19, status: "Steady", statusClass: "steady" },
+              { name: "Emergency tooth pain — Google Search", sub: "Same-week openings", spend: 640, leads: 12, status: "Watching", statusClass: "watching" }
+            ],
+            calls: [
+              { time: "8:41", suffix: "AM", title: "Implant consultation request", meta: "Google Search Ads · 5m 36s · Consult booked", status: "Booked", statusClass: "booked" },
+              { time: "9:58", suffix: "AM", title: "Tooth pain — asked for same-week opening", meta: "Google Business Profile call · 4m 02s · Appointment booked", status: "Booked", statusClass: "booked" },
+              { time: "11:26", suffix: "AM", title: "Invisalign questions from website chat", meta: "Website chat · 2m 48s · Callback requested", status: "Callback", statusClass: "callback" },
+              { time: "1:15", suffix: "PM", title: "New patient cleaning", meta: "Organic search · 3m 15s · Appointment booked", status: "Booked", statusClass: "booked" },
+              { time: "3:32", suffix: "PM", title: "Insurance coverage check", meta: "Referral · 1m 59s · Front desk booked", status: "Booked", statusClass: "booked" }
+            ],
+            quotes: [
+              { stars: "★★★★★", text: "Cracked a tooth on a Friday. They got me in the same week — zero judgment, all fixed.", who: "Sarah K. · Wyomissing · 3 weeks ago" },
+              { stars: "★★★★☆", text: "They laid out my options and never once pushed the expensive one.", who: "James L. · West Reading · 1 month ago" },
+              { stars: "★★★★★", text: "The front desk remembered my name on my second visit. Small thing. Big deal.", who: "Priya S. · Wyomissing · 2 months ago" }
+            ],
+            work: [
+              { tag: "Ads", title: "Rebuilt implant ads around consult bookings", detail: "The landing page now leads with the consult, not the brochure. Cost per lead is down." },
+              { tag: "Booking", title: "Added online booking to the Google profile", detail: "After-hours searchers can grab a slot instead of calling a competitor in the morning." },
+              { tag: "Reviews", title: "Review request after every cleaning", detail: "The front desk asks while the visit is still fresh — new reviews landed this window." },
+              { tag: "Budget", title: "Paused the broad-match ad group", detail: "It was buying clicks that never became patients. Budget moved to implant and emergency terms." }
+            ],
+            next: "An Invisalign open-house offer for October, aimed at the consult pipeline that’s already converting."
+          }
+        };
+
+        var els = {};
+        ["bizName", "bizMeta", "verdictRange", "verdictText", "watchWorking", "watchWatching", "watchSlipping",
+         "bookedValue", "bookedDelta", "answeredValue", "answeredDelta", "missedSub", "cplValue", "cplDelta",
+         "spendValue", "spendDelta", "roasValue", "roasDelta", "chartTitle", "chartSubtitle", "mainChart",
+         "chartWrap", "chartTooltip", "peakInsight", "latestInsight", "countInsight", "channelVerdict",
+         "channelBars", "fRang", "fP1", "fConv", "fP2", "fBooked", "fP3", "fCust", "repRating", "repStars",
+         "repReviews", "repSource", "growthWindow", "growthNum", "growthSpark", "sentimentText",
+         "reviewQuotes", "campBody", "callList", "workGrid", "nextText"].forEach(function (id) {
+          els[id] = document.getElementById(id);
+        });
+
+        function fmtInt(n) { return new Intl.NumberFormat("en-US").format(Math.round(n)); }
+        function fmtMoney(n) { return "$" + fmtInt(n); }
+        function fmtMoney2(n) { return "$" + n.toFixed(2); }
+        function fmtPct(n) { return (n > 0 ? "+" : "") + n.toFixed(1) + "%"; }
+        function absPct(n) { return Math.abs(n).toFixed(1) + "%"; }
+        function sum(points, key) { return points.reduce(function (total, p) { return total + p[key]; }, 0); }
+        function paidRevenueShare(client) {
+          return client.sources.reduce(function (total, source) {
+            return total + (source.paid ? source.revenueShare : 0);
+          }, 0);
+        }
+        function allocateRounded(total, shares) {
+          var raw = shares.map(function (share) { return total * share / 100; });
+          var rounded = raw.map(function (value) { return Math.floor(value); });
+          var assigned = rounded.reduce(function (a, b) { return a + b; }, 0);
+          var leftover = Math.round(total - assigned);
+          var order = raw.map(function (value, index) {
+            return { index: index, frac: value - Math.floor(value) };
+          }).sort(function (a, b) { return b.frac - a.frac; });
+          for (var i = 0; i < leftover; i++) {
+            rounded[order[i % order.length].index] += 1;
+          }
+          return rounded;
+        }
+        function totals(clientKey, periodKey) {
+          var client = CLIENTS[clientKey];
+          var period = client.periods[periodKey];
+          var points = period.points;
+          var leads = sum(points, "leads");
+          var spend = sum(points, "spend");
+          var revenue = sum(points, "revenue");
+          var booked = sum(points, "calls");
+          var paidShare = paidRevenueShare(client);
+          var paidRevenue = revenue * paidShare / 100;
+          return {
+            points: points, previous: period.previous, leads: leads, spend: spend, revenue: revenue,
+            booked: booked, answered: period.answered, missed: period.missed,
+            rang: period.answered + period.missed, conv: period.conv, cust: period.cust,
+            revNew: period.revNew, revSeries: period.revSeries,
+            paidRevenue: paidRevenue, paidShare: paidShare,
+            cpl: spend / leads, roas: paidRevenue / spend
+          };
+        }
+        function previousDerived(prev, paidShare) {
+          return { cpl: prev.spend / prev.leads, roas: (prev.revenue * paidShare / 100) / prev.spend };
+        }
+        function deltaPct(current, previous) { return ((current - previous) / previous) * 100; }
+        function setDelta(el, pct, lowerIsBetter, neutral) {
+          var good = lowerIsBetter ? pct < 0 : pct > 0;
+          el.textContent = (pct > 0 ? "▲ " : pct < 0 ? "▼ " : "• ") + fmtPct(pct) + " vs prior window";
+          el.className = "delta " + (neutral ? "flat" : good ? "good" : "bad");
+        }
+        function sparklineSVG(values, color) {
+          var width = 260, height = 44, min = Math.min.apply(null, values), max = Math.max.apply(null, values);
+          var range = max - min || 1;
+          var pts = values.map(function (v, i) {
+            var x = values.length === 1 ? width / 2 : (i / (values.length - 1)) * (width - 8) + 4;
+            var y = 38 - ((v - min) / range) * 30;
+            return { x: x, y: y };
+          });
+          var line = pts.map(function (p, i) { return (i === 0 ? "M " : "L ") + p.x.toFixed(1) + " " + p.y.toFixed(1); }).join(" ");
+          var area = line + " L " + pts[pts.length - 1].x.toFixed(1) + " 44 L " + pts[0].x.toFixed(1) + " 44 Z";
+          var last = pts[pts.length - 1];
+          return '<svg viewBox="0 0 260 44" aria-hidden="true"><path d="' + area + '" fill="' + color + '" opacity="0.13"/><path d="' + line + '" fill="none" stroke="' + color + '" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="' + last.x.toFixed(1) + '" cy="' + last.y.toFixed(1) + '" r="3.5" fill="' + color + '"/></svg>';
+        }
+
+        function metricValue(point, metric, paidShare) {
+          if (metric === "revenue") return point.revenue;
+          if (metric === "cpl") return point.spend / point.leads;
+          if (metric === "roas") return (point.revenue * paidShare / 100) / point.spend;
+          return point.leads;
+        }
+        function metricLabel(metric) {
+          if (metric === "revenue") return "Revenue";
+          if (metric === "cpl") return "Cost per lead";
+          if (metric === "roas") return "Revenue per $1";
+          return "Leads";
+        }
+        function formatMetric(value, metric) {
+          if (metric === "revenue") return fmtMoney(value);
+          if (metric === "cpl") return fmtMoney2(value);
+          if (metric === "roas") return "$" + value.toFixed(2) + " back per $1";
+          return fmtInt(value) + " leads";
+        }
+
+        var lastChartData = null;
+        function renderChart(data) {
+          lastChartData = data;
+          var points = data.points;
+          var metric = state.metric;
+          var inkColor = cssVar("--ink") || "#181410";
+          var paperColor = cssVar("--paper-2") || "#fbf7ec";
+          var accent = cssVar("--accent") || "#e8490f";
+          var gridColor = cssVar("--chart-grid") || "rgba(128,128,128,0.15)";
+          var axisColor = cssVar("--chart-axis") || inkColor;
+          var compact = els.chartWrap.clientWidth > 0 && els.chartWrap.clientWidth < 560;
+          var width = compact ? 460 : 920, height = compact ? 420 : 380;
+          var margin = compact ? { left: 74, right: 16, top: 42, bottom: 72 } : { left: 72, right: 22, top: 38, bottom: 52 };
+          var axisFont = compact ? 16 : 13;
+          els.mainChart.setAttribute("viewBox", "0 0 " + width + " " + height);
+          var plotW = width - margin.left - margin.right;
+          var plotH = height - margin.top - margin.bottom;
+          var values = points.map(function (p) { return metricValue(p, metric, data.paidShare); });
+          var maxValue = Math.max.apply(null, values) * 1.15;
+          var ticks = [0, 0.25, 0.5, 0.75, 1].map(function (f) { return maxValue * f; });
+          var svg = "";
+          svg += '<defs><linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="' + accent + '" stop-opacity="0.26"/><stop offset="100%" stop-color="' + accent + '" stop-opacity="0.02"/></linearGradient></defs>';
+
+          ticks.forEach(function (tick) {
+            var y = margin.top + plotH - (tick / maxValue) * plotH;
+            var label = metric === "revenue" ? fmtMoney(tick) : metric === "cpl" ? "$" + Math.round(tick) : metric === "roas" ? "$" + tick.toFixed(1) : Math.round(tick);
+            svg += '<line x1="' + margin.left + '" y1="' + y + '" x2="' + (width - margin.right) + '" y2="' + y + '" stroke="' + gridColor + '" stroke-width="1" stroke-dasharray="3 5"/>';
+            svg += '<text x="' + (margin.left - 10) + '" y="' + (y + 4) + '" text-anchor="end" fill="' + axisColor + '" font-family="IBM Plex Mono, monospace" font-size="' + axisFont + '" font-weight="600">' + label + '</text>';
+          });
+
+          var linePts = points.map(function (p, i) {
+            var v = metricValue(p, metric, data.paidShare);
+            var cx = margin.left + (plotW * (points.length === 1 ? 0.5 : i / (points.length - 1)));
+            var y = margin.top + plotH - (v / maxValue) * plotH;
+            return { x: cx, y: y, point: p, value: v, index: i };
+          });
+
+          var linePath = linePts.map(function (pt, i) { return (i === 0 ? "M " : "L ") + pt.x.toFixed(1) + " " + pt.y.toFixed(1); }).join(" ");
+          var areaPath = linePath + " L " + linePts[linePts.length - 1].x.toFixed(1) + " " + (margin.top + plotH) + " L " + linePts[0].x.toFixed(1) + " " + (margin.top + plotH) + " Z";
+          svg += '<path d="' + areaPath + '" fill="url(#areaFill)"/>';
+          svg += '<path d="' + linePath + '" fill="none" stroke="' + inkColor + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>';
+
+          var peakIndex = values.indexOf(Math.max.apply(null, values));
+          linePts.forEach(function (pt) {
+            var isPeak = pt.index === peakIndex;
+            if (isPeak) {
+              svg += '<circle cx="' + pt.x + '" cy="' + pt.y + '" r="10" fill="none" stroke="' + accent + '" stroke-width="2.5"/>';
+              var labelX = Math.max(margin.left + 44, Math.min(width - margin.right - 44, pt.x));
+              svg += '<text x="' + labelX + '" y="' + (pt.y - 18) + '" text-anchor="middle" fill="' + accent + '" font-family="IBM Plex Mono, monospace" font-size="' + (compact ? 15 : 12) + '" font-weight="600" letter-spacing="1">PEAK · ' + pt.point.label.toUpperCase() + '</text>';
+            }
+            svg += '<circle cx="' + pt.x + '" cy="' + pt.y + '" r="' + (isPeak ? 5.5 : 4) + '" fill="' + paperColor + '" stroke="' + inkColor + '" stroke-width="3"/>';
+            svg += '<circle class="chart-hit" data-index="' + pt.index + '" cx="' + pt.x + '" cy="' + pt.y + '" r="17" fill="transparent" pointer-events="all"/>';
+          });
+
+          var tickEvery = compact ? Math.max(1, Math.ceil(points.length / 5)) : (points.length > 10 ? 2 : 1);
+          points.forEach(function (p, i) {
+            if (i % tickEvery !== 0 && i !== points.length - 1) return;
+            var x = margin.left + (plotW * (points.length === 1 ? 0.5 : i / (points.length - 1)));
+            var y = height - (compact ? 42 : 30);
+            svg += '<text x="' + x + '" y="' + y + '" text-anchor="end" transform="rotate(-28 ' + x + ' ' + y + ')" fill="' + axisColor + '" font-family="IBM Plex Mono, monospace" font-size="' + axisFont + '" font-weight="600">' + p.label + '</text>';
+          });
+
+          els.mainChart.innerHTML = svg;
+
+          var latest = points[points.length - 1];
+          els.peakInsight.textContent = formatMetric(values[peakIndex], metric) + " · " + points[peakIndex].label;
+          els.latestInsight.textContent = formatMetric(values[values.length - 1], metric) + " · " + latest.label;
+          els.countInsight.textContent = points.length + (state.period === "7" ? " days" : state.period === "30" ? " × 3-day intervals" : " weeks") + " · last " + state.period + " days";
+
+          Array.prototype.forEach.call(els.mainChart.querySelectorAll(".chart-hit"), function (hit) {
+            function show() {
+              var p = points[Number(hit.getAttribute("data-index"))];
+              var cx = Number(hit.getAttribute("cx"));
+              var cy = Number(hit.getAttribute("cy"));
+              var leftPct = Math.max(18, Math.min(82, (cx / width) * 100));
+              var topPct = (cy / height) * 100;
+              els.chartTooltip.innerHTML = "<strong>" + p.label + "</strong>" + formatMetric(metricValue(p, metric, data.paidShare), metric) + "<br/><span>" + fmtInt(p.calls) + " booked · " + fmtMoney(p.spend) + " spend</span>";
+              els.chartTooltip.style.left = leftPct + "%";
+              els.chartTooltip.style.top = topPct + "%";
+              els.chartTooltip.classList.add("visible");
+            }
+            function hide() { els.chartTooltip.classList.remove("visible"); }
+            hit.addEventListener("pointerenter", show);
+            hit.addEventListener("pointerdown", show);
+            hit.addEventListener("pointerleave", hide);
+            hit.addEventListener("pointerup", function () { setTimeout(hide, 1800); });
+          });
+        }
+
+        function topSource(client) {
+          return client.sources.reduce(function (best, s) { return s.revenueShare > best.revenueShare ? s : best; }, client.sources[0]);
+        }
+        function weakestPaid(client) {
+          var paid = client.sources.filter(function (s) { return s.paid; });
+          return paid.reduce(function (worst, s) { return s.revenueShare < worst.revenueShare ? s : worst; }, paid[0]);
+        }
+
+        function renderChannels(client, data) {
+          var revenueValues = allocateRounded(data.revenue, client.sources.map(function (s) { return s.revenueShare; }));
+          var leadValues = allocateRounded(data.leads, client.sources.map(function (s) { return s.leadShare; }));
+          var maxShare = Math.max.apply(null, client.sources.map(function (s) { return s.revenueShare; }));
+          els.channelBars.innerHTML = client.sources.map(function (source, i) {
+            var w = Math.max(3, (source.revenueShare / maxShare) * 100);
+            return '<div class="chan-row"><div class="chan-top"><div class="chan-name">' + source.name + '<span>' + fmtInt(leadValues[i]) + ' leads · ' + source.leadShare + '% of leads</span></div><div class="chan-value">' + fmtMoney(revenueValues[i]) + ' · ' + source.revenueShare + '%</div></div><div class="chan-track"><div class="chan-fill" style="width:' + w.toFixed(1) + '%"></div></div></div>';
+          }).join("");
+          var top = topSource(client);
+          var weak = weakestPaid(client);
+          els.channelVerdict.innerHTML = "<strong>" + top.name + "</strong> drives " + top.revenueShare + "% of revenue — that’s where the next dollar goes. Weakest paid channel: <strong>" + weak.name + "</strong> at " + weak.revenueShare + "% — the first place we’d trim.";
+        }
+
+        function renderFunnel(data) {
+          function pct(a, b) { return b > 0 ? Math.round((a / b) * 100) + "%" : "—"; }
+          els.fRang.textContent = fmtInt(data.rang);
+          els.fConv.textContent = fmtInt(data.conv);
+          els.fBooked.textContent = fmtInt(data.booked);
+          els.fCust.textContent = fmtInt(data.cust);
+          els.fP1.textContent = pct(data.conv, data.rang) + " picked up";
+          els.fP2.textContent = pct(data.booked, data.conv) + " booked";
+          els.fP3.textContent = pct(data.cust, data.booked) + " closed";
+        }
+
+        function renderVerdict(client, data) {
+          var prev = previousDerived(data.previous, data.paidShare);
+          var leadDelta = deltaPct(data.leads, data.previous.leads);
+          var bookedDelta = deltaPct(data.booked, data.previous.calls);
+          var cplDelta = deltaPct(data.cpl, prev.cpl);
+          var roasDelta = deltaPct(data.roas, prev.roas);
+          var top = topSource(client);
+          var weak = weakestPaid(client);
+          var s;
+          if (leadDelta >= 0 && cplDelta <= 0) {
+            s = "Lead flow is <strong>healthy</strong> — booked jobs are up " + absPct(bookedDelta) + " and every lead costs " + absPct(cplDelta) + " less than the window before. <strong>" + top.name + "</strong> is doing the heavy lifting at " + top.revenueShare + "% of revenue, so the next dollar goes there.";
+          } else if (leadDelta >= 0) {
+            s = "Lead flow is <strong>growing, but getting pricier</strong> — booked jobs are up " + absPct(bookedDelta) + ", yet cost per lead rose " + absPct(cplDelta) + ". <strong>" + top.name + "</strong> still carries the mix at " + top.revenueShare + "% of revenue.";
+          } else {
+            s = "Lead flow <strong>slipped</strong> this window — leads are down " + absPct(leadDelta) + " and booked jobs down " + absPct(bookedDelta) + ". The first places to look: cost per lead, and how fast inquiries get called back.";
+          }
+          els.verdictText.innerHTML = s;
+          els.verdictRange.textContent = "The verdict · Last " + state.period + " days";
+
+          var candidates = [
+            { key: "leads", score: leadDelta, text: "Lead flow is up <strong>" + absPct(leadDelta) + "</strong> — " + fmtInt(data.leads) + " qualified leads, the strongest stretch in this view." },
+            { key: "cpl", score: -cplDelta, text: "Cost per lead dropped <strong>" + absPct(cplDelta) + "</strong> to " + fmtMoney(Math.round(data.cpl)) + " — growth is getting cheaper, not just louder." },
+            { key: "roas", score: roasDelta, text: "Revenue back per $1 of ads climbed <strong>" + absPct(roasDelta) + "</strong> to $" + data.roas.toFixed(2) + " — the ads are paying for themselves better." },
+            { key: "booked", score: bookedDelta, text: "Booked jobs rose <strong>" + absPct(bookedDelta) + "</strong> to " + fmtInt(data.booked) + " — the calendar is the proof." }
+          ];
+          candidates.sort(function (a, b) { return b.score - a.score; });
+          els.watchWorking.innerHTML = candidates[0].text;
+
+          if (cplDelta > 0) {
+            els.watchWatching.innerHTML = "Cost per lead rose <strong>" + absPct(cplDelta) + "</strong> to " + fmtMoney(Math.round(data.cpl)) + ". We’re watching <strong>" + weak.name + "</strong> before it eats the margin.";
+          } else {
+            els.watchWatching.innerHTML = "Cost per lead is healthy at <strong>" + fmtMoney(Math.round(data.cpl)) + "</strong>, but <strong>" + weak.name + "</strong> returns the least of the paid channels — the first place we’d trim.";
+          }
+
+          if (data.missed > data.previous.missed) {
+            els.watchSlipping.innerHTML = "Missed calls rose to <strong>" + fmtInt(data.missed) + "</strong> — every one is a job that went to whoever picked up.";
+          } else {
+            els.watchSlipping.innerHTML = "Missed calls improved to <strong>" + fmtInt(data.missed) + "</strong> (from " + fmtInt(data.previous.missed) + "), but " + fmtInt(data.missed) + " callers still reached voicemail — an after-hours answer would catch them.";
+          }
+        }
+
+        function renderKPIs(data) {
+          var prev = previousDerived(data.previous, data.paidShare);
+          els.bookedValue.textContent = fmtInt(data.booked);
+          setDelta(els.bookedDelta, deltaPct(data.booked, data.previous.calls), false, false);
+          els.answeredValue.textContent = fmtInt(data.answered);
+          setDelta(els.answeredDelta, deltaPct(data.answered, data.previous.answered), false, false);
+          els.missedSub.textContent = fmtInt(data.missed) + " missed — every missed call is a job that went to whoever picked up.";
+          els.cplValue.textContent = fmtMoney(Math.round(data.cpl));
+          setDelta(els.cplDelta, deltaPct(data.cpl, prev.cpl), true, false);
+          els.spendValue.textContent = fmtMoney(data.spend);
+          setDelta(els.spendDelta, deltaPct(data.spend, data.previous.spend), false, true);
+          els.roasValue.innerHTML = "$" + data.roas.toFixed(2);
+          setDelta(els.roasDelta, deltaPct(data.roas, prev.roas), false, false);
+        }
+
+        function renderChartHead(client, data) {
+          var prev = previousDerived(data.previous, data.paidShare);
+          var leadDelta = deltaPct(data.leads, data.previous.leads);
+          var revDelta = deltaPct(data.revenue, data.previous.revenue);
+          var cplDelta = deltaPct(data.cpl, prev.cpl);
+          var roasDelta = deltaPct(data.roas, prev.roas);
+          var title;
+          if (state.metric === "leads") {
+            title = "Lead flow is " + (leadDelta >= 0 ? "up " : "down ") + absPct(leadDelta) + " — " + fmtInt(data.leads) + " leads this window";
+          } else if (state.metric === "revenue") {
+            title = "Revenue is " + (revDelta >= 0 ? "up " : "down ") + absPct(revDelta) + " — " + fmtMoney(data.revenue) + " booked from marketing";
+          } else if (state.metric === "cpl") {
+            title = "Cost per lead is " + (cplDelta <= 0 ? "down " : "up ") + absPct(cplDelta) + " — now " + fmtMoney2(data.cpl) + " a lead";
+          } else {
+            title = "Every $1 of ads returned $" + data.roas.toFixed(2) + " — " + (roasDelta >= 0 ? "up " : "down ") + absPct(roasDelta) + " on the last window";
+          }
+          els.chartTitle.textContent = title;
+          els.chartSubtitle.textContent = (state.period === "7" ? "Daily" : state.period === "30" ? "Three-day interval" : "Weekly") + " sample " + metricLabel(state.metric).toLowerCase() + " for " + client.business + " · last " + state.period + " days.";
+        }
+
+        function renderReputation(client, data) {
+          els.repRating.textContent = client.rating;
+          els.repStars.textContent = client.stars;
+          els.repStars.setAttribute("aria-label", client.rating + " star rating");
+          els.repReviews.textContent = fmtInt(client.reviews) + " Google reviews";
+          els.repSource.href = client.sourceUrl;
+          els.growthWindow.textContent = "Last " + state.period + " days";
+          els.growthNum.textContent = "+" + fmtInt(data.revNew);
+          els.growthSpark.innerHTML = sparklineSVG(data.revSeries, cssVar("--ink") || "#181410");
+          els.sentimentText.textContent = client.sentiment;
+          els.reviewQuotes.innerHTML = client.quotes.map(function (q) {
+            return '<blockquote class="review-quote"><p>“' + q.text + '”</p><footer><span class="q-stars">' + q.stars + '</span> · ' + q.who + '</footer></blockquote>';
+          }).join("");
+        }
+
+        function renderCampaigns(client) {
+          els.campBody.innerHTML = client.campaigns.map(function (c) {
+            return '<tr><td class="camp-name" data-label="Campaign">' + c.name + '<span>' + c.sub + '</span></td>' +
+              '<td class="num" data-label="Spend">' + fmtMoney(c.spend) + '</td>' +
+              '<td class="num" data-label="Leads">' + fmtInt(c.leads) + '</td>' +
+              '<td class="num" data-label="Cost / lead">' + fmtMoney(c.spend / c.leads) + '</td>' +
+              '<td data-label="Status"><span class="status ' + c.statusClass + '"><i aria-hidden="true"></i>' + c.status + '</span></td></tr>';
+          }).join("");
+        }
+
+        function renderCalls(client) {
+          els.callList.innerHTML = client.calls.map(function (call) {
+            return '<article class="call-row"><div class="call-time">' + call.time + '<span>' + call.suffix + '</span></div><div class="call-main"><strong>' + call.title + '</strong><p>' + call.meta + '</p></div><span class="status ' + call.statusClass + '"><i aria-hidden="true"></i>' + call.status + '</span></article>';
+          }).join("");
+        }
+
+        function renderWork(client) {
+          els.workGrid.innerHTML = client.work.map(function (w) {
+            return '<div class="work-item"><span class="mono">' + w.tag + '</span><h3>' + w.title + '</h3><p>' + w.detail + '</p></div>';
+          }).join("");
+          els.nextText.textContent = client.next;
+        }
+
+        function renderHeader(client) {
+          els.bizName.textContent = client.business;
+          els.bizMeta.textContent = client.category + " · " + client.location + " · Snapshot checked Oct 1, 2026";
+        }
+
+        function renderAll() {
+          var client = CLIENTS[state.client];
+          var data = totals(state.client, state.period);
+          renderHeader(client);
+          renderVerdict(client, data);
+          renderKPIs(data);
+          renderChartHead(client, data);
+          renderChart(data);
+          renderChannels(client, data);
+          renderFunnel(data);
+          renderReputation(client, data);
+          renderCampaigns(client);
+          renderCalls(client);
+          renderWork(client);
+        }
+
+        function setPressed(selector, attr, value) {
+          Array.prototype.forEach.call(document.querySelectorAll(selector), function (btn) {
+            btn.setAttribute("aria-pressed", btn.getAttribute(attr) === value ? "true" : "false");
+          });
+        }
+
+        Array.prototype.forEach.call(document.querySelectorAll(".client-btn"), function (btn) {
+          btn.addEventListener("click", function () {
+            state.client = btn.getAttribute("data-client");
+            setPressed(".client-btn", "data-client", state.client);
+            renderAll();
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll(".period-btn"), function (btn) {
+          btn.addEventListener("click", function () {
+            state.period = btn.getAttribute("data-period");
+            setPressed(".period-btn", "data-period", state.period);
+            renderAll();
+          });
+        });
+        Array.prototype.forEach.call(document.querySelectorAll(".metric-btn"), function (btn) {
+          btn.addEventListener("click", function () {
+            state.metric = btn.getAttribute("data-metric");
+            setPressed(".metric-btn", "data-metric", state.metric);
+            var data = totals(state.client, state.period);
+            renderChartHead(CLIENTS[state.client], data);
+            renderChart(data);
+          });
+        });
+
+        var resizeTimer = null;
+        window.addEventListener("resize", function () {
+          clearTimeout(resizeTimer);
+          resizeTimer = setTimeout(function () { if (lastChartData) renderChart(lastChartData); }, 180);
+        });
+
+        var schemeQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+        if (schemeQuery && schemeQuery.addEventListener) {
+          schemeQuery.addEventListener("change", function () { renderAll(); });
+        }
+
+        renderAll();
+      })();
+    </script>
+  </body>
+</html>
