@@ -103,10 +103,10 @@ function BlogIndex() {
           <div>
             <p className="kick">Newsletter</p>
             <h2>
-              The Growth Ledger, <em>once a month.</em>
+              The Growth Ledger, <em>every two weeks.</em>
             </h2>
             <p className="nl-lede">
-              One email a month: what we are seeing across client accounts, what is working,
+              One email every two weeks: what we are seeing across client accounts, what is working,
               what we would stop doing. No spam, no fluff.
             </p>
           </div>

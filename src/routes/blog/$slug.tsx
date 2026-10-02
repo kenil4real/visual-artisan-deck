@@ -64,7 +64,7 @@ function BlogPost() {
               <span aria-hidden="true">·</span>
               <span>{post.readTime}</span>
               <span aria-hidden="true">·</span>
-              <span>By the Kekera crew</span>
+              <span>By Divya Ramani</span>
             </p>
           </div>
         </div>
