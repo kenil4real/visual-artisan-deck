@@ -81,21 +81,21 @@ var DASH = {
     label: "Last 7 days",
     tip: "Trend: climbing — budget shifted to Google Search",
     rev: "$48,210", revD: "▲ +14.2%", leads: "126", leadsD: "▲ +31",
-    cpl: "$38.40", cplD: "▼ −18.6%", roas: "5.1×", roasD: "▲ +0.4",
+    cpl: "$75.00", cplD: "▼ 18.6%", roas: "5.1×", roasD: "▲ +0.4×",
     series: [18,22,20,26,30,27,34,41,38,47,52,49,58,66]
   },
   "30D": {
     label: "Last 30 days",
     tip: "Trend: scaling — new creatives beat the control",
     rev: "$214,600", revD: "▲ +24.8%", leads: "612", leadsD: "▲ +148",
-    cpl: "$31.90", cplD: "▼ −26.4%", roas: "5.4×", roasD: "▲ +0.7",
+    cpl: "$64.94", cplD: "▼ 26.4%", roas: "5.4×", roasD: "▲ +0.7×",
     series: [10,12,11,14,13,16,19,17,22,21,25,24,28,31,29,34,38,36,42,45,43,50,54,52,59,63,61,68,74,80]
   },
   "90D": {
     label: "Last 90 days",
     tip: "Trend: compounding — engine at full pace",
     rev: "$672,900", revD: "▲ +41.5%", leads: "1,904", leadsD: "▲ +612",
-    cpl: "$27.10", cplD: "▼ −34.2%", roas: "5.9×", roasD: "▲ +1.2",
+    cpl: "$59.90", cplD: "▼ 34.2%", roas: "5.9×", roasD: "▲ +1.2×",
     series: [6,7,8,7,9,10,12,11,13,15,14,17,16,19,21,20,24,23,27,26,30,29,33,36,35,39,38,43,42,47,46,51,55,53,58,57,63,62,68,72,71,78,84,90,100]
   }
 };
@@ -117,6 +117,13 @@ function svgEl(name, attrs){
   var n = document.createElementNS(svgNS, name);
   for (var k in attrs) n.setAttribute(k, attrs[k]);
   return n;
+}
+
+function tickDate(key, n, idx){
+  var rangeDays = { "7D": 7, "30D": 30, "90D": 90 }[key] || 7;
+  var back = Math.round((n - 1 - idx) * rangeDays / (n - 1));
+  var d = new Date(); d.setDate(d.getDate() - back);
+  return (d.getMonth() + 1) + "/" + d.getDate();
 }
 
 function renderChart(key, animate){
@@ -184,7 +191,7 @@ function renderChart(key, animate){
       "font-family": "'IBM Plex Mono',monospace",
       "letter-spacing": "1"
     });
-    tx.textContent = "P" + (idx + 1);
+    tx.textContent = tickDate(key, data.series.length, idx);
     svg.appendChild(tx);
   }
 
