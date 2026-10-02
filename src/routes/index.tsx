@@ -6,7 +6,7 @@ import bodyHtml from "../homepage-body.html?raw";
 import homepageJs from "../homepage.js?raw";
 
 const description =
-  "Kekera Inc. — a full-service growth agency for Berks County businesses. Creative, ads, web, and AI analytics under one roof.";
+  "Kekera Inc. — a full-service growth agency for small and midsize businesses. Creative, ads, web, and AI analytics under one roof.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,7 +38,6 @@ export const Route = createFileRoute("/")({
           description,
           url: "https://www.kekerainc.com/",
           email: "Divyaramani@kekerainc.com",
-          areaServed: "Berks County, PA",
         }),
       },
     ],
