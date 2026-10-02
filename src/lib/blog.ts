@@ -68,8 +68,8 @@ export const posts: BlogPost[] = [
   {
     slug: "local-seo-map-pack",
     title: "Local SEO: the 5 Things That Actually Move You Up the Map Pack",
-    date: "2026-10-15",
-    dateLabel: "October 15, 2026",
+    date: "2026-10-01",
+    dateLabel: "October 1, 2026",
     readTime: "3 min read",
     excerpt:
       "Everyone wants the top of the map pack. Few want to do the unglamorous work that gets you there. Five things, in order of impact.",
@@ -114,8 +114,8 @@ export const posts: BlogPost[] = [
   {
     slug: "your-ads-are-fine-your-creative-is-the-problem",
     title: "Your Ads Are Fine. Your Creative Is the Problem.",
-    date: "2026-10-08",
-    dateLabel: "October 8, 2026",
+    date: "2026-10-01",
+    dateLabel: "October 1, 2026",
     readTime: "2 min read",
     excerpt:
       "We audit ad accounts every week. Targeting is fine. Budget is fine. The ads themselves are tired. Here is the fix nobody wants to hear.",
