@@ -1,9 +1,10 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { BlogHeader, BlogFooter } from "@/components/blog-chrome";
 import { NewsletterSignup } from "@/components/newsletter-signup";
 import { getPost, posts, type BlogBlock } from "@/lib/blog";
+
+import "../../homepage.css";
 
 export const Route = createFileRoute("/blog/$slug")({
   loader: ({ params }) => {
@@ -14,7 +15,10 @@ export const Route = createFileRoute("/blog/$slug")({
   head: ({ loaderData }) => ({
     meta: [
       { title: `${loaderData?.title ?? "Post"} — The Kekera Growth Ledger` },
-      { name: "description", content: loaderData?.excerpt ?? "A post from The Kekera Growth Ledger." },
+      {
+        name: "description",
+        content: loaderData?.excerpt ?? "A post from The Kekera Growth Ledger.",
+      },
       { property: "og:title", content: `${loaderData?.title ?? "Post"} — The Kekera Growth Ledger` },
       { property: "og:description", content: loaderData?.excerpt ?? "" },
       { property: "og:type", content: "article" },
@@ -28,18 +32,12 @@ export const Route = createFileRoute("/blog/$slug")({
 
 function Block({ block }: { block: BlogBlock }) {
   if (block.type === "h2") {
-    return <h2 className="mt-12 font-display text-2xl leading-tight sm:text-3xl">{block.text}</h2>;
+    return <h2>{block.text}</h2>;
   }
   if (block.type === "quote") {
-    return (
-      <blockquote className="my-10 border-l-2 border-signal pl-6 font-display text-xl leading-snug sm:text-2xl">
-        {block.text}
-      </blockquote>
-    );
+    return <blockquote>{block.text}</blockquote>;
   }
-  return (
-    <p className="mt-6 text-base leading-relaxed text-foreground/85 sm:text-lg">{block.text}</p>
-  );
+  return <p>{block.text}</p>;
 }
 
 function BlogPost() {
@@ -48,80 +46,74 @@ function BlogPost() {
   const next = posts[(index + 1) % posts.length];
 
   return (
-    <main className="min-h-screen bg-paper text-foreground">
+    <div className="kekera-home">
       <BlogHeader />
 
-      <article className="page-gutter pt-14 sm:pt-20">
-        <div className="mx-auto max-w-3xl">
-          <Link
-            to="/blog"
-            className="label-caps inline-flex items-center gap-2 text-muted-foreground hover:text-signal"
-          >
-            <ArrowLeft className="size-4" /> All field notes
-          </Link>
-          <h1 className="mt-8 font-display text-4xl leading-[1.02] sm:text-6xl">{post.title}</h1>
-          <p className="label-caps mt-6 flex flex-wrap items-center gap-3 text-muted-foreground">
-            <span>{post.dateLabel}</span>
-            <span aria-hidden="true">·</span>
-            <span>{post.readTime}</span>
-            <span aria-hidden="true">·</span>
-            <span>By the Kekera crew</span>
-          </p>
+      <article className="blog-article">
+        <div className="wrap">
+          <div className="ba-narrow">
+            <Link to="/blog" className="ba-back">
+              <span aria-hidden="true">←</span> The Growth Ledger
+            </Link>
+            <p className="kick">The Kekera Blog</p>
+            <h1>{post.title}</h1>
+            <p className="blog-meta ba-meta">
+              <span>{post.dateLabel}</span>
+              <span aria-hidden="true">·</span>
+              <span>{post.readTime}</span>
+              <span aria-hidden="true">·</span>
+              <span>By the Kekera crew</span>
+            </p>
+          </div>
         </div>
 
-        <div className="mx-auto mt-10 max-w-5xl overflow-hidden bg-muted">
-          <img
-            src={post.image}
-            alt={post.imageAlt}
-            width={1600}
-            height={1000}
-            className="aspect-[16/10] w-full object-cover"
-          />
+        <div className="wrap">
+          <div className="ba-img">
+            <img src={post.image} alt={post.imageAlt} width={1600} height={1000} />
+          </div>
         </div>
 
-        <div className="mx-auto max-w-3xl pb-4">
-          {post.blocks.map((block, i) => (
-            <Block key={i} block={block} />
-          ))}
+        <div className="wrap">
+          <div className="ba-narrow ba-prose">
+            {post.blocks.map((block, i) => (
+              <Block key={i} block={block} />
+            ))}
+          </div>
         </div>
       </article>
 
-      <section className="page-gutter py-16 sm:py-20" aria-label="Next post">
-        <div className="mx-auto max-w-3xl border-t border-foreground/20 pt-10">
-          <p className="label-caps text-signal">Keep reading</p>
-          <Link
-            to="/blog/$slug"
-            params={{ slug: next.slug }}
-            className="group mt-4 flex items-center justify-between gap-6"
-          >
-            <span className="font-display text-2xl leading-tight group-hover:underline group-hover:decoration-signal group-hover:underline-offset-8 sm:text-3xl">
-              {next.title}
-            </span>
-            <ArrowRight
-              className="size-6 shrink-0 transition-transform group-hover:translate-x-1"
-              aria-hidden="true"
-            />
-          </Link>
+      <section className="section" aria-label="Next post">
+        <div className="wrap">
+          <div className="ba-narrow ba-next">
+            <p className="kick">Keep reading</p>
+            <Link to="/blog/$slug" params={{ slug: next.slug }} className="ba-next-link">
+              <span className="ba-next-title">{next.title}</span>
+              <span className="ba-next-arr" aria-hidden="true">
+                →
+              </span>
+            </Link>
+          </div>
         </div>
       </section>
 
-      <section
-        className="page-gutter bg-ink py-16 text-paper sm:py-20"
-        aria-label="Newsletter signup"
-      >
-        <div className="mx-auto grid max-w-3xl gap-8">
+      <section className="blog-newsletter" aria-label="Newsletter signup">
+        <div className="wrap nl-grid">
           <div>
-            <p className="label-caps text-signal">Newsletter</p>
-            <h2 className="mt-4 font-display text-3xl leading-tight">The Growth Ledger, once a month.</h2>
-            <p className="mt-4 text-sm leading-relaxed text-paper/70">
+            <p className="kick">Newsletter</p>
+            <h2>
+              The Growth Ledger, <em>once a month.</em>
+            </h2>
+            <p className="nl-lede">
               What we are seeing across client accounts, in your inbox. No spam, no fluff.
             </p>
           </div>
-          <NewsletterSignup dark />
+          <div>
+            <NewsletterSignup />
+          </div>
         </div>
       </section>
 
       <BlogFooter />
-    </main>
+    </div>
   );
 }
