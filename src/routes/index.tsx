@@ -17,10 +17,19 @@ export const Route = createFileRoute("/")({
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://www.kekerainc.com/" },
+      { property: "og:image", content: "https://www.kekerainc.com/og-image.png" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      {
+        property: "og:image:alt",
+        content: "Kekera Inc. — More calls. More booked jobs. Less guesswork.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:image", content: "https://www.kekerainc.com/og-image.png" },
     ],
     links: [
       { rel: "canonical", href: "https://www.kekerainc.com/" },
+      { rel: "apple-touch-icon", href: "/apple-touch-icon.png" },
     ],
     scripts: [
       {

@@ -109,3 +109,8 @@
   .kekera-home .nl-form{flex-direction:column}
   .kekera-home .nl-form .btn{justify-content:center}
 }
+.kekera-home .tb-announce{font:600 11px/1.5 var(--fm);letter-spacing:.08em;text-transform:uppercase}
+.kekera-home .tb-new{color:var(--accent);font-weight:700;margin-right:6px}
+
+/* anchor targets: clear the sticky nav on jump (belt & suspenders with scroll-padding) */
+.kekera-home section[id], .kekera-home header[id] { scroll-margin-top: calc(var(--nav-h) + 22px); }
