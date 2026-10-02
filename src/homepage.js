@@ -82,6 +82,7 @@ var DASH = {
     tip: "Trend: climbing — budget shifted to Google Search",
     rev: "$48,210", revD: "▲ +14.2%", leads: "126", leadsD: "▲ +31",
     cpl: "$75.00", cplD: "▼ 18.6%", roas: "5.1×", roasD: "▲ +0.4×",
+    camps: [["Google Search · Emergency AC", 4850, 65], ["Google Search · Brand + HVAC", 2700, 38], ["Meta · Tune-up offer", 1900, 23]],
     series: [18,22,20,26,30,27,34,41,38,47,52,49,58,66]
   },
   "30D": {
@@ -89,6 +90,7 @@ var DASH = {
     tip: "Trend: scaling — new creatives beat the control",
     rev: "$214,600", revD: "▲ +24.8%", leads: "612", leadsD: "▲ +148",
     cpl: "$64.94", cplD: "▼ 26.4%", roas: "5.4×", roasD: "▲ +0.7×",
+    camps: [["Google Search · Emergency AC", 20400, 314], ["Google Search · Brand + HVAC", 11300, 174], ["Meta · Tune-up offer", 8043, 124]],
     series: [10,12,11,14,13,16,19,17,22,21,25,24,28,31,29,34,38,36,42,45,43,50,54,52,59,63,61,68,74,80]
   },
   "90D": {
@@ -96,6 +98,7 @@ var DASH = {
     tip: "Trend: compounding — engine at full pace",
     rev: "$672,900", revD: "▲ +41.5%", leads: "1,904", leadsD: "▲ +612",
     cpl: "$59.90", cplD: "▼ 34.2%", roas: "5.9×", roasD: "▲ +1.2×",
+    camps: [["Google Search · Emergency AC", 58500, 977], ["Google Search · Brand + HVAC", 32400, 541], ["Meta · Tune-up offer", 23150, 386]],
     series: [6,7,8,7,9,10,12,11,13,15,14,17,16,19,21,20,24,23,27,26,30,29,33,36,35,39,38,43,42,47,46,51,55,53,58,57,63,62,68,72,71,78,84,90,100]
   }
 };
@@ -213,8 +216,28 @@ function setKPIs(key){
   var tip = document.getElementById("chartTip"); if (tip) tip.textContent = d.tip;
 }
 
+function fmt$(n){ return "$" + n.toLocaleString("en-US"); }
+
+function renderCamps(key){
+  var wrap = document.getElementById("campRows");
+  if (!wrap || !DASH[key] || !DASH[key].camps) return;
+  wrap.textContent = "";
+  DASH[key].camps.forEach(function(c){
+    var row = document.createElement("div");
+    row.className = "camp-row";
+    var cpl = c[1] / c[2];
+    row.innerHTML = "<span class=\"c-name\"></span><span></span><span></span><span></span>";
+    row.children[0].textContent = c[0];
+    row.children[1].textContent = fmt$(c[1]);
+    row.children[2].textContent = c[2].toLocaleString("en-US");
+    row.children[3].textContent = "$" + cpl.toFixed(2);
+    wrap.appendChild(row);
+  });
+}
+
 (function dashInit(){
   renderChart("7D", false);
+  renderCamps("7D");
   var tabs = document.querySelectorAll(".range-tabs button");
   tabs.forEach(function(btn){
     btn.addEventListener("click", function(){
@@ -223,6 +246,7 @@ function setKPIs(key){
       var key = btn.getAttribute("data-range");
       setKPIs(key);
       renderChart(key, true);
+      renderCamps(key);
     });
   });
 })();
