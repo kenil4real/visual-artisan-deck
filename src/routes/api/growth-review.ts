@@ -113,6 +113,10 @@ export const Route = createFileRoute("/api/growth-review")({
           return json({ ok: false, error: "Couldn't build your PDF. Please try again." }, 500);
         }
 
+        // Test mode (?test=1 in body): send only the confirmation + delivery,
+        // skip the scheduled follow-ups and the lead notification.
+        const isTest = body.test === true;
+
         const confirmation = confirmationEmail(vars);
         const delivery = deliveryEmail(vars);
         const followups = [followup1, followup2, followup3].map(
@@ -133,16 +137,19 @@ export const Route = createFileRoute("/api/growth-review")({
             headers: unsub,
             attachments: [{ filename: `Kekera-Growth-Review-${host}.pdf`, content: pdf }],
           });
-          // 3. follow-ups — scheduled
-          for (const f of followups) {
-            await sendOrThrow({
-              from: FROM, to: email,
-              subject: f.email.subject, text: f.email.text, html: f.email.html,
-              headers: unsub,
-              scheduledAt: new Date(Date.now() + f.days * DAY).toISOString(),
-            });
+          // 3. follow-ups — scheduled (skipped in test mode)
+          if (!isTest) {
+            for (const f of followups) {
+              await sendOrThrow({
+                from: FROM, to: email,
+                subject: f.email.subject, text: f.email.text, html: f.email.html,
+                headers: unsub,
+                scheduledAt: new Date(Date.now() + f.days * DAY).toISOString(),
+              });
+            }
           }
-          // 4. notify Kenil/Divya with the lead + scores
+          // 4. notify Kenil/Divya with the lead + scores (skipped in test mode)
+          if (!isTest) {
           const dimLines = audit.dimensions
             .map((d) => `- ${d.name}: ${d.score.toFixed(1)}/10`)
             .join("\n");
@@ -155,6 +162,7 @@ export const Route = createFileRoute("/api/growth-review")({
             text:
               `New Growth Review request.\n\nWebsite: ${host}\nBusiness: ${audit.businessName}\nEmail: ${email}\nOverall: ${audit.overall.toFixed(1)}/10\n\n${dimLines}\n\nQuick wins:\n${winLines}\n\nConfirmation + PDF delivered. 3 follow-ups scheduled (days 3/8/15).\nIf they book a call, record and send the 3-minute video yourself.`,
           });
+          }
         } catch (e) {
           console.error("growth-review send failed", e);
           return json({ ok: false, error: "Couldn't send your review. Please try again." }, 500);
