@@ -18,7 +18,7 @@ const SKIP_IPS = new Set([
 const SKIP_HEADER = "x-tripwire-skip";
 
 const BOT_RE =
-  /bot|crawler|spider|crawl|slurp|mediapartners|baidu|yandex|sogou|exabot|facebot|ia_archiver|pingdom|uptimerobot|monitor|vercel-screenshot|headless/i;
+  /bot|crawler|spider|crawl|slurp|mediapartners|baidu|yandex|sogou|exabot|facebot|ia_archiver|pingdom|uptimerobot|monitor|vercel-screenshot|headless|curl|wget|httpie|python-requests|go-http/i;
 
 function isPageView(request: Request, url: URL): boolean {
   if (request.method !== "GET") return false;
@@ -58,6 +58,7 @@ export function maybeAlertOutOfArea(request: Request): void {
       `When: ${when}\n` +
       `Page: ${url.pathname}\n` +
       `Location: ${where || "unknown"}\n` +
+      `IP: ${clientIp || "unknown"}\n` +
       `Browser: ${ua.slice(0, 160)}\n`;
 
     const apiKey = process.env["RESEND_API_KEY"];
