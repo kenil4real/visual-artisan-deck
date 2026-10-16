@@ -67,11 +67,13 @@ function checkRow(doc: PDFKit.PDFDocument, y: number, label: string, pass: boole
   const x = 60;
   const w = doc.page.width - 120;
   if (y > doc.page.height - 110) return -1;
-  doc
-    .font("Helvetica-Bold")
-    .fontSize(11)
-    .fillColor(pass ? GOOD : BAD)
-    .text(pass ? "✓" : "✕", x, y);
+  // Vector-drawn check / cross — doesn't depend on the font having ✓/✕ glyphs.
+  doc.strokeColor(pass ? GOOD : BAD).lineWidth(2).lineCap("round");
+  if (pass) {
+    doc.moveTo(x + 1, y + 6).lineTo(x + 5, y + 10).lineTo(x + 11, y + 1).stroke();
+  } else {
+    doc.moveTo(x + 2, y + 2).lineTo(x + 10, y + 10).moveTo(x + 10, y + 2).lineTo(x + 2, y + 10).stroke();
+  }
   doc.font("Helvetica-Bold").fontSize(11).fillColor(INK).text(label, x + 22, y);
   doc.font("Helvetica").fontSize(9.5).fillColor(MUTED).text(detail, x + 22, y + 15, { width: w - 22 });
   return y + 42;
@@ -190,7 +192,7 @@ export function buildReviewPdf(audit: AuditResult): Promise<Buffer> {
     // CTA box
     y += 10;
     const boxY = y;
-    doc.rect(60, boxY, W - 120, 150).fill(INK);
+    doc.rect(60, boxY, W - 120, 172).fill(INK);
     doc.font("Helvetica-Bold").fontSize(15).fillColor(PAPER)
       .text("Want the 3-minute video walkthrough?", 84, boxY + 22, { width: W - 168 });
     doc.font("Helvetica").fontSize(10.5).fillColor("#C9BFA9")
@@ -200,7 +202,7 @@ export function buildReviewPdf(audit: AuditResult): Promise<Buffer> {
     doc.font("Helvetica-Bold").fontSize(12).fillColor("#FFFFFF")
       .text("Book a Growth Call  →", 84, boxY + 108, { width: 220, align: "center" });
     doc.font("Helvetica").fontSize(9).fillColor("#C9BFA9")
-      .text("Divyaramani@kekerainc.com  ·  We reply within one business day.", 84, boxY + 140 - 12, { width: W - 168 });
+      .text("Divyaramani@kekerainc.com  ·  We reply within one business day.", 84, boxY + 144, { width: W - 168 });
 
     footer(doc, 5);
     doc.end();

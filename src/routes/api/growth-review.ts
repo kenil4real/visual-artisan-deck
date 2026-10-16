@@ -130,12 +130,13 @@ export const Route = createFileRoute("/api/growth-review")({
             subject: confirmation.subject, text: confirmation.text, html: confirmation.html,
             headers: unsub,
           });
-          // 2. delivery with PDF — now
+          // 2. delivery with PDF — scheduled 1 hour out
           await sendOrThrow({
             from: FROM, to: email,
             subject: delivery.subject, text: delivery.text, html: delivery.html,
             headers: unsub,
             attachments: [{ filename: `Kekera-Growth-Review-${host}.pdf`, content: pdf }],
+            scheduledAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
           });
           // 3. follow-ups — scheduled (skipped in test mode)
           if (!isTest) {
