@@ -10,6 +10,13 @@ const ALERT_TO = "ramani1880@gmail.com";
 
 const HOME_STATES = new Set(["PA", "NJ"]);
 
+// Infrastructure IPs that should never trigger an alert (my own test servers).
+// Update if the VM's egress IP changes. Header bypass is for ad-hoc tests.
+const SKIP_IPS = new Set([
+  "104.29.200.165", // Muse VM egress (Ashburn, VA) — Oct 2026
+]);
+const SKIP_HEADER = "x-tripwire-skip";
+
 const BOT_RE =
   /bot|crawler|spider|crawl|slurp|mediapartners|baidu|yandex|sogou|exabot|facebot|ia_archiver|pingdom|uptimerobot|monitor|vercel-screenshot|headless/i;
 
@@ -29,6 +36,12 @@ export function maybeAlertOutOfArea(request: Request): void {
 
     const ua = request.headers.get("user-agent") ?? "";
     if (BOT_RE.test(ua)) return;
+
+    // Skip my own test traffic: explicit header or known infra IP.
+    if (request.headers.get(SKIP_HEADER) === "1") return;
+    const fwd = request.headers.get("x-forwarded-for") ?? "";
+    const clientIp = fwd.split(",")[0].trim() || request.headers.get("x-real-ip") || "";
+    if (clientIp && SKIP_IPS.has(clientIp)) return;
 
     const country = request.headers.get("x-vercel-ip-country") ?? "";
     const region = request.headers.get("x-vercel-ip-country-region") ?? "";
