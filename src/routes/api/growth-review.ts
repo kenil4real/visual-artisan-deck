@@ -78,6 +78,12 @@ export const Route = createFileRoute("/api/growth-review")({
         }
         const resend = new Resend(apiKey);
         const unsub = { "List-Unsubscribe": `<mailto:${NOTIFY}?subject=unsubscribe>` };
+        // Resend's SDK resolves (doesn't throw) on API errors like an unverified
+        // domain — check .error explicitly so we never claim "sent" when it wasn't.
+        const sendOrThrow = async (args: Parameters<Resend["emails"]["send"]>[0]) => {
+          const { error } = await resend.emails.send(args);
+          if (error) throw new Error(typeof error === "string" ? error : error.message);
+        };
 
         // --- run the audit ---
         let audit;
@@ -89,8 +95,8 @@ export const Route = createFileRoute("/api/growth-review")({
             subject: `We couldn't scan ${host} — let's do it by hand`,
             text: `Hi there,\n\nI tried to run your Growth Review on ${host} but couldn't reach the site (it may block automated visits, or be temporarily down).\n\nReply to this email and I'll run the review by hand — same 5-page PDF, same 1–10 scores.\n\n— Divya\n\nDivya Ramani\nKekera Inc.\nDivyaramani@kekerainc.com`,
           };
-          await resend.emails.send({ from: FROM, to: email, subject: msg.subject, text: msg.text, headers: unsub });
-          await resend.emails.send({
+          await sendOrThrow({ from: FROM, to: email, subject: msg.subject, text: msg.text, headers: unsub });
+          await sendOrThrow({
             from: FROM,
             to: NOTIFY,
             subject: `Growth Review: scan failed for ${host} (${email})`,
@@ -115,13 +121,13 @@ export const Route = createFileRoute("/api/growth-review")({
 
         try {
           // 1. confirmation — now
-          await resend.emails.send({
+          await sendOrThrow({
             from: FROM, to: email,
             subject: confirmation.subject, text: confirmation.text, html: confirmation.html,
             headers: unsub,
           });
           // 2. delivery with PDF — now
-          await resend.emails.send({
+          await sendOrThrow({
             from: FROM, to: email,
             subject: delivery.subject, text: delivery.text, html: delivery.html,
             headers: unsub,
@@ -129,7 +135,7 @@ export const Route = createFileRoute("/api/growth-review")({
           });
           // 3. follow-ups — scheduled
           for (const f of followups) {
-            await resend.emails.send({
+            await sendOrThrow({
               from: FROM, to: email,
               subject: f.email.subject, text: f.email.text, html: f.email.html,
               headers: unsub,
@@ -143,7 +149,7 @@ export const Route = createFileRoute("/api/growth-review")({
           const winLines = audit.quickWins
             .map((w, i) => `${i + 1}. ${w.title} — ${w.why}`)
             .join("\n");
-          await resend.emails.send({
+          await sendOrThrow({
             from: FROM, to: NOTIFY,
             subject: `New Growth Review: ${host} scored ${audit.overall.toFixed(1)}/10`,
             text:
