@@ -1,6 +1,7 @@
 /**
  * Kekera Growth Review — Divya's email sequence.
- * Templates render from audit variables; copy approved by Kenil.
+ * 5 emails max: confirmation + delivery + 3 follow-ups (days 3, 8, 15).
+ * Templates render from audit variables; copy approved by Kenil (Oct 16, 2026).
  */
 
 export interface ReviewVars {
@@ -46,9 +47,9 @@ function textFooter(body: string): string {
 export function confirmationEmail(v: ReviewVars): Email {
   const subject = "Your Growth Review is on its way";
   const text = textFooter(
-    `Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF lands within the hour.\n\nTalk soon,`
+    `Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox in the next few minutes.\n\nTalk soon,`
   );
-  return { subject, text, html: wrapHtml(`Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF lands within the hour.\n\nTalk soon,`) };
+  return { subject, text, html: wrapHtml(`Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox in the next few minutes.\n\nTalk soon,`) };
 }
 
 export function deliveryEmail(v: ReviewVars): Email {
@@ -70,20 +71,8 @@ export function followup2(v: ReviewVars): Email {
 }
 
 export function followup3(v: ReviewVars): Email {
-  const subject = "What changed for a shop like yours";
-  const body = `Hi there,\n\nQuick story. A home-services business came to us scoring a 4 overall — same neighborhood as your weakest area, ${v.weakest}. We fixed the review flow and the call tracking first, then moved budget to the one campaign that was actually booking jobs.\n\nNinety days later: cost per lead down by a third, and the owner could finally say which dollar did what.\n\nYour starting point is in the PDF I sent. The next step is a conversation, whenever you want it.\n\nBook a Growth Call: ${BOOK_CALL}`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
-}
-
-export function followup4(v: ReviewVars): Email {
-  const subject = "Still want the video walkthrough?";
-  const body = `Hi there,\n\nJust checking — the offer stands. Book a Growth Call and I'll record that 3-minute video walkthrough for ${v.site} personally: your scores, your site, what I'd fix first.\n\nNo forms beyond the booking, no pitch at the end. If we're not the right fit I'll tell you that too.\n\nBook a Growth Call: ${BOOK_CALL}`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
-}
-
-export function followup5(v: ReviewVars): Email {
-  const subject = "Closing your file";
-  const body = `Hi there,\n\nThis is the last note I'll send — I don't want to be the agency that keeps writing.\n\nYour PDF is yours to keep, and the scores won't go stale for a while. If you ever want that video walkthrough or a second look down the road, just reply to any of my emails. I read everything myself.\n\nGood luck with ${v.site} —`;
+  const subject = `One last thing on ${v.site}`;
+  const body = `Hi there,\n\nThis is the last note I'll send — I don't want to be the agency that keeps writing.\n\nBefore I close your file: the video walkthrough offer still stands. I'll record 3 minutes on ${v.site} personally — your scores, your site, what I'd fix first. No forms beyond the booking, no pitch at the end. If we're not the right fit I'll tell you that too.\n\nBook a Growth Call: ${BOOK_CALL}\n\nEither way, your PDF is yours to keep, and the scores won't go stale for a while. If you ever want a second look down the road, just reply to any of my emails. I read everything myself.\n\nGood luck with ${v.site} —`;
   return { subject, text: textFooter(body), html: wrapHtml(body) };
 }
 

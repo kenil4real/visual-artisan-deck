@@ -9,8 +9,6 @@ import {
   followup1,
   followup2,
   followup3,
-  followup4,
-  followup5,
   type ReviewVars,
 } from "../../lib/review-emails";
 
@@ -111,8 +109,8 @@ export const Route = createFileRoute("/api/growth-review")({
 
         const confirmation = confirmationEmail(vars);
         const delivery = deliveryEmail(vars);
-        const followups = [followup1, followup2, followup3, followup4, followup5].map(
-          (fn, i) => ({ email: fn(vars), days: [2, 5, 9, 14, 21][i] })
+        const followups = [followup1, followup2, followup3].map(
+          (fn, i) => ({ email: fn(vars), days: [3, 8, 15][i] })
         );
 
         try {
@@ -149,7 +147,7 @@ export const Route = createFileRoute("/api/growth-review")({
             from: FROM, to: NOTIFY,
             subject: `New Growth Review: ${host} scored ${audit.overall.toFixed(1)}/10`,
             text:
-              `New Growth Review request.\n\nWebsite: ${host}\nBusiness: ${audit.businessName}\nEmail: ${email}\nOverall: ${audit.overall.toFixed(1)}/10\n\n${dimLines}\n\nQuick wins:\n${winLines}\n\nConfirmation + PDF delivered. 5 follow-ups scheduled (days 2/5/9/14/21).\nIf they book a call, record and send the 3-minute video yourself.`,
+              `New Growth Review request.\n\nWebsite: ${host}\nBusiness: ${audit.businessName}\nEmail: ${email}\nOverall: ${audit.overall.toFixed(1)}/10\n\n${dimLines}\n\nQuick wins:\n${winLines}\n\nConfirmation + PDF delivered. 3 follow-ups scheduled (days 3/8/15).\nIf they book a call, record and send the 3-minute video yourself.`,
           });
         } catch (e) {
           console.error("growth-review send failed", e);
