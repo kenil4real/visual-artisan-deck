@@ -2,6 +2,7 @@ import photographySetImg from "@/assets/photography-set.jpg";
 import productFilmImg from "@/assets/product-film.jpg";
 import droneAerialImg from "@/assets/drone-aerial.jpg";
 import heroProductionImg from "@/assets/hero-production.jpg";
+import testimonialSetImg from "@/assets/testimonial-set.jpg";
 
 export type BlogBlock =
   { type: "p"; text: string } | { type: "h2"; text: string } | { type: "quote"; text: string };
@@ -20,6 +21,51 @@ export interface BlogPost {
 
 // Newest first: posts[0] is the featured post on /blog.
 export const posts: BlogPost[] = [
+  {
+    slug: "your-email-list-is-your-highest-roi-channel",
+    title: "Your Email List Is Your Highest-ROI Channel. You're Treating It Like a Chore.",
+    date: "2026-10-15",
+    dateLabel: "October 15, 2026",
+    readTime: "3 min read",
+    excerpt:
+      "Email returns more per dollar than any ad channel, yet most businesses mail their list once a quarter and call it done. Four fixes.",
+    image: testimonialSetImg,
+    imageAlt: "Film crew recording an interview with a business owner in a modern office",
+    blocks: [
+      {
+        type: "p",
+        text: "I ask a lot of business owners the same question: how many email addresses do you have from past customers? The usual answers are a shrug, or a spreadsheet nobody has opened since 2022. Then I ask what it costs them to reach those same customers again, and the answer is always the same: they pay Google or Meta for the privilege of renting back attention they already earned once.",
+      },
+      { type: "h2", text: "Collect emails like rent is due" },
+      {
+        type: "p",
+        text: "Every invoice, every quote, every appointment: that's an email address the business earned and should keep. Add a simple signup on the website and the checkout or intake process, and the list grows on its own. A list of 500 real past customers is worth more than 5,000 followers, because followers belong to the platform and customers belong to you.",
+      },
+      { type: "h2", text: "Mail monthly at minimum" },
+      {
+        type: "p",
+        text: "The businesses that get value from email send it on a schedule, not when they remember. Once a month, minimum. Not a designed masterpiece: a short note with one useful thing and one offer. Consistency beats production value every time. The list forgets businesses that disappear for six months, and re-welcoming a cold list is twice the work.",
+      },
+      { type: "h2", text: "Automate the three emails that do the work" },
+      {
+        type: "p",
+        text: "You don't need a drip campaign with 40 steps. You need three automations: a welcome email for new signups, a follow-up for quotes that went quiet, and a check-in for customers who haven't bought in a while. These three run in the background and quietly recover revenue that marketing spend can't touch. I've seen the quote follow-up alone close a quarter of deals that would otherwise die.",
+      },
+      { type: "h2", text: "Write like a person, not a brand" },
+      {
+        type: "p",
+        text: "Plain text from a real name beats a designed template from a logo. Short subject lines beat clever ones. One clear offer beats five. The inboxes that win are the ones that read like they came from a person who knows what they're talking about, because they did.",
+      },
+      {
+        type: "quote",
+        text: "You don't own your followers. You own your list. Treat it like the asset it is.",
+      },
+      {
+        type: "p",
+        text: "Start this week: export every customer email you can find into one list, send one useful note, and set up the quote follow-up. That's a marketing channel with zero ad spend, and it's the one your competitors keep ignoring.",
+      },
+    ],
+  },
   {
     slug: "your-homepage-has-8-seconds",
     title: "Your Homepage Has 8 Seconds. Here's What It's Wasting Them On.",
