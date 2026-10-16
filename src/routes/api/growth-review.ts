@@ -160,7 +160,7 @@ export const Route = createFileRoute("/api/growth-review")({
             from: FROM, to: NOTIFY,
             subject: `New Growth Review: ${host} scored ${audit.overall.toFixed(1)}/10`,
             text:
-              `New Growth Review request.\n\nWebsite: ${host}\nBusiness: ${audit.businessName}\nEmail: ${email}\nOverall: ${audit.overall.toFixed(1)}/10\n\n${dimLines}\n\nQuick wins:\n${winLines}\n\nConfirmation + PDF delivered. 3 follow-ups scheduled (days 3/8/15).\nIf they book a call, record and send the 3-minute video yourself.`,
+              `New Growth Review request.\n\nWebsite: ${host}\nBusiness: ${audit.businessName}\nEmail: ${email}\nOverall: ${audit.overall.toFixed(1)}/10\n\n${dimLines}\n\nQuick wins:\n${winLines}`,
           });
           }
         } catch (e) {
