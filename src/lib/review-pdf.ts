@@ -4,6 +4,7 @@
  */
 import PDFDocument from "pdfkit";
 import type { AuditResult } from "./growth-audit";
+import { ARIMO_REGULAR_B64, ARIMO_BOLD_B64, ARIMO_ITALIC_B64 } from "./pdf-fonts";
 
 const PAPER = "#F4EFE3";
 const INK = "#181410";
@@ -78,7 +79,18 @@ function checkRow(doc: PDFKit.PDFDocument, y: number, label: string, pass: boole
 
 export function buildReviewPdf(audit: AuditResult): Promise<Buffer> {
   return new Promise((resolve, reject) => {
-    const doc = new PDFDocument({ size: "LETTER", margin: 0 });
+    // NOTE: pass font:null so the constructor doesn't touch pdfkit's standard-font
+    // loader (its font files don't survive the serverless bundle). We register our
+    // own embedded Arimo TTFs under the Helvetica names instead.
+    const doc = new PDFDocument({ size: "LETTER", margin: 0, font: null as unknown as string });
+    try {
+      doc.registerFont("Helvetica", Buffer.from(ARIMO_REGULAR_B64, "base64"));
+      doc.registerFont("Helvetica-Bold", Buffer.from(ARIMO_BOLD_B64, "base64"));
+      doc.registerFont("Helvetica-Oblique", Buffer.from(ARIMO_ITALIC_B64, "base64"));
+    } catch (e) {
+      reject(e);
+      return;
+    }
     const chunks: Buffer[] = [];
     doc.on("data", (c: Buffer) => chunks.push(c));
     doc.on("end", () => resolve(Buffer.concat(chunks)));

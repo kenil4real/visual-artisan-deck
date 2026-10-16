@@ -365,7 +365,7 @@ function renderCamps(key){
         }).then(function(res){
           if (res.status === 200 && res.body && res.body.ok){
             emailForm.style.display = "none";
-            note.innerHTML = "<b>&#10003; Done — your review is on its way to " + esc(em) + ".</b> Your scored PDF lands within the hour, from Divya herself. <b>We reply within one business day.</b>";
+            note.innerHTML = "<b>&#10003; Done — your review is on its way to " + esc(em) + ".</b> Your scored PDF lands in minutes, from Divya herself. <b>We reply within one business day.</b>";
             reset.style.display = "inline-block";
           } else {
             btn.disabled = false;
