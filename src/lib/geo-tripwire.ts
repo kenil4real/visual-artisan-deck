@@ -47,7 +47,7 @@ export function maybeAlertOutOfArea(request: Request): void {
       `Location: ${where || "unknown"}\n` +
       `Browser: ${ua.slice(0, 160)}\n`;
 
-    const apiKey = process.env.RESEND_API_KEY;
+    const apiKey = process.env["RESEND_API_KEY"];
     if (!apiKey) {
       console.warn("[tripwire] no RESEND_API_KEY — out-of-area visit not alerted:", where, url.pathname);
       return;
