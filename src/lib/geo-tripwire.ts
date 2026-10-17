@@ -13,7 +13,8 @@ const HOME_STATES = new Set(["PA", "NJ"]);
 // Infrastructure IPs that should never trigger an alert (my own test servers).
 // Update if the VM's egress IP changes. Header bypass is for ad-hoc tests.
 const SKIP_IPS = new Set([
-  "104.29.200.165", // Muse VM egress (Ashburn, VA) — Oct 2026
+  "104.29.200.165", // Muse VM egress (Ashburn, VA) — Oct 16 2026
+  "104.29.193.195", // Muse VM egress — Oct 17 2026 (rotates; header is the reliable skip)
 ]);
 const SKIP_HEADER = "x-tripwire-skip";
 
