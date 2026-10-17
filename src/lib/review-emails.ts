@@ -47,9 +47,9 @@ function textFooter(body: string): string {
 export function confirmationEmail(v: ReviewVars): Email {
   const subject = "Your Growth Review is on its way";
   const text = textFooter(
-    `Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`
+    `Hi there,\n\nThanks for requesting a Growth Review — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`
   );
-  return { subject, text, html: wrapHtml(`Hi there,\n\nGot it — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`) };
+  return { subject, text, html: wrapHtml(`Hi there,\n\nThanks for requesting a Growth Review — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`) };
 }
 
 export function deliveryEmail(v: ReviewVars): Email {
