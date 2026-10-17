@@ -20,8 +20,12 @@ export interface Email {
   html: string;
 }
 
-const BOOK_CALL =
+const BOOK_CALL_HREF =
   "mailto:Divyaramani@kekerainc.com?subject=Growth%20call%20request";
+const BOOK_CALL_TEXT =
+  "Book a Growth Call: just reply to this email and I'll set it up.";
+const BOOK_CALL_HTML =
+  `<a href="${BOOK_CALL_HREF}" style="color:#E8490F;">Book a Growth Call</a>: just reply to this email and I'll set it up.`;
 const UNSUB =
   "Don't want these? Just reply “stop” and I'll close your file.";
 
@@ -33,7 +37,7 @@ function wrapHtml(body: string): string {
   return `<!doctype html><html><body style="margin:0;padding:0;background:#F4EFE3;">
 <div style="max-width:560px;margin:0 auto;padding:32px 24px;font-family:Georgia,'Times New Roman',serif;color:#181410;font-size:16px;line-height:1.65;">
 ${ps}
-<p style="margin:24px 0 0 0;">— Divya</p>
+<p style="margin:24px 0 0 0;">- Divya</p>
 <p style="margin:4px 0 0 0;font-size:14px;color:#6B6257;">Divya Ramani<br>Kekera Inc.<br><a href="mailto:Divyaramani@kekerainc.com" style="color:#E8490F;">Divyaramani@kekerainc.com</a></p>
 <hr style="border:0;border-top:1px solid #DCD2BE;margin:28px 0 12px 0;">
 <p style="font-size:12px;color:#8A8172;">${UNSUB}</p>
@@ -41,39 +45,39 @@ ${ps}
 }
 
 function textFooter(body: string): string {
-  return `${body}\n\n— Divya\n\nDivya Ramani\nKekera Inc.\nDivyaramani@kekerainc.com\n\n---\n${UNSUB}`;
+  return `${body}\n\n- Divya\n\nDivya Ramani\nKekera Inc.\nDivyaramani@kekerainc.com\n\n---\n${UNSUB}`;
 }
 
 export function confirmationEmail(v: ReviewVars): Email {
   const subject = "Your Growth Review is on its way";
   const text = textFooter(
-    `Hi there,\n\nThanks for requesting a Growth Review — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`
+    `Hi there,\n\nThanks for requesting a Growth Review. ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`
   );
-  return { subject, text, html: wrapHtml(`Hi there,\n\nThanks for requesting a Growth Review — ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`) };
+  return { subject, text, html: wrapHtml(`Hi there,\n\nThanks for requesting a Growth Review. ${v.site} is in the queue.\n\nI'm scoring it now across SEO, your Google Business Profile, paid ads, website, and social, each 1 to 10. Your PDF is being built right now and will land in your inbox within the hour.\n\nTalk soon,`) };
 }
 
 export function deliveryEmail(v: ReviewVars): Email {
   const subject = `Your Growth Review: ${v.site} scored ${v.overall}/10`;
-  const body = `Hi there,\n\nYour Growth Review is ready — the PDF is attached.\n\n${v.site} scored ${v.overall} out of 10 overall. The short version:\n\n- Strongest area: ${v.strongest}\n- Needs the most work: ${v.weakest}\n\nPage 5 has the three fixes I'd do first. Most of them cost nothing but an afternoon.\n\nAnd if you'd like, book a Growth Call and I'll record a 3-minute video walkthrough just for you — your numbers, my screen, plain English. No pitch, I promise.\n\nBook a Growth Call: ${BOOK_CALL}\n\nP.S. Every number in the PDF comes from an automated scan of your site's public signals. The judgment calls are mine.`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
+  const body = `Hi there,\n\nYour Growth Review is ready. The PDF is attached.\n\n${v.site} scored ${v.overall} out of 10 overall. The short version:\n\n- Strongest area: ${v.strongest}\n- Needs the most work: ${v.weakest}\n\nPage 5 has the three fixes I'd do first. Most of them cost nothing but an afternoon.\n\nAnd if you'd like, book a Growth Call and I'll record a 3-minute video walkthrough just for you: your numbers, my screen, plain English. No pitch, I promise.\n\n${BOOK_CALL_TEXT}\n\nP.S. Every number in the PDF comes from an automated scan of your site's public signals. The judgment calls are mine.`;
+  return { subject, text: textFooter(body), html: wrapHtml(body.replace(BOOK_CALL_TEXT, BOOK_CALL_HTML)) };
 }
 
 export function followup1(v: ReviewVars): Email {
   const subject = `The one fix I'd do this week on ${v.site}`;
   const body = `Hi there,\n\nIf you only do one thing from your review, make it this one: ${v.win1}.\n\n${v.win1Why}\n\nThe other two are on page 5 of your PDF whenever you're ready.`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
+  return { subject, text: textFooter(body), html: wrapHtml(body.replace(BOOK_CALL_TEXT, BOOK_CALL_HTML)) };
 }
 
 export function followup2(v: ReviewVars): Email {
   const subject = "What I keep seeing";
-  const body = `Hi there,\n\nI look at a lot of local business sites in a week, and the same three gaps come up again and again:\n\n1. No call tracking, so nobody knows which ads make the phone ring.\n2. A Google Business Profile with five photos from 2019.\n3. A website that loads fine on a laptop and falls apart on a phone.\n\n${v.site} had ${v.weakCount} of these in your review. They're all fixable, and none of them need a new website.\n\nIf you want a second pair of eyes, book a Growth Call — I'll walk through your numbers on video myself.\n\nBook a Growth Call: ${BOOK_CALL}`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
+  const body = `Hi there,\n\nI look at a lot of local business sites in a week, and the same three gaps come up again and again:\n\n1. No call tracking, so nobody knows which ads make the phone ring.\n2. A Google Business Profile with five photos from 2019.\n3. A website that loads fine on a laptop and falls apart on a phone.\n\n${v.site} had ${v.weakCount} of these in your review. They're all fixable, and none of them need a new website.\n\nIf you want a second pair of eyes, book a Growth Call and I'll walk through your numbers on video myself.\n\n${BOOK_CALL_TEXT}`;
+  return { subject, text: textFooter(body), html: wrapHtml(body.replace(BOOK_CALL_TEXT, BOOK_CALL_HTML)) };
 }
 
 export function followup3(v: ReviewVars): Email {
   const subject = `One last thing on ${v.site}`;
-  const body = `Hi there,\n\nThis is the last note I'll send — I don't want to be the agency that keeps writing.\n\nBefore I close your file: the video walkthrough offer still stands. I'll record 3 minutes on ${v.site} personally — your scores, your site, what I'd fix first. No forms beyond the booking, no pitch at the end. If we're not the right fit I'll tell you that too.\n\nBook a Growth Call: ${BOOK_CALL}\n\nEither way, your PDF is yours to keep, and the scores won't go stale for a while. If you ever want a second look down the road, just reply to any of my emails. I read everything myself.\n\nGood luck with ${v.site} —`;
-  return { subject, text: textFooter(body), html: wrapHtml(body) };
+  const body = `Hi there,\n\nThis is the last note I'll send. I don't want to be the agency that keeps writing.\n\nBefore I close your file: the video walkthrough offer still stands. I'll record 3 minutes on ${v.site} personally: your scores, your site, what I'd fix first. No forms beyond the booking, no pitch at the end. If we're not the right fit I'll tell you that too.\n\n${BOOK_CALL_TEXT}\n\nEither way, your PDF is yours to keep, and the scores won't go stale for a while. If you ever want a second look down the road, just reply to any of my emails. I read everything myself.\n\nGood luck with ${v.site}.`;
+  return { subject, text: textFooter(body), html: wrapHtml(body.replace(BOOK_CALL_TEXT, BOOK_CALL_HTML)) };
 }
 
 export function buildVars(audit: {
