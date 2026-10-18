@@ -1,14 +1,12 @@
-// Out-of-area visitor tripwire for kekerainc.com.
-// Runs inside the server entry on every request. If a real (non-bot) visitor
-// loads a page from outside PA/NJ, Ramani gets an email alert immediately.
-// Uses Vercel's geo headers (x-vercel-ip-country-region etc.) — no external API.
-// FROM uses Resend's test address until kekerainc.com is domain-verified;
-// switch ALERT_FROM to "Kekera Site Watch <Divyaramani@kekerainc.com>" after verification.
+// Government-visitor watch for kekerainc.com.
+// Runs inside the server entry on every request. If the visitor's IP belongs
+// to a US government network (DHS/USCIS or other federal agency), Ramani gets
+// an email alert immediately. Ordinary visitors (and bots) are ignored silently.
+// Uses ip-api.com (free, no key) for IP -> org/ASN lookup. Noisy geo alerts
+// were removed Oct 18, 2026 per his request.
 
-const ALERT_FROM = "Kekera Site Watch <onboarding@resend.dev>";
+const ALERT_FROM = "Kekera Site Watch <Divyaramani@kekerainc.com>";
 const ALERT_TO = "ramani1880@gmail.com";
-
-const HOME_STATES = new Set(["PA", "NJ"]);
 
 // Infrastructure IPs that should never trigger an alert (my own test servers).
 // Update if the VM's egress IP changes. Header bypass is for ad-hoc tests.
@@ -21,6 +19,10 @@ const SKIP_HEADER = "x-tripwire-skip";
 const BOT_RE =
   /bot|crawler|spider|crawl|slurp|mediapartners|baidu|yandex|sogou|exabot|facebot|ia_archiver|pingdom|uptimerobot|monitor|vercel-screenshot|headless|curl|wget|httpie|python-requests|go-http/i;
 
+// Matches US federal government networks in ip-api's org/isp fields.
+const GOV_RE =
+  /homeland security|\bdhs\b|u\.?s\.? citizenship|immigration services|\buscis\b|customs and border|federal government|u\.?s\.? government|general services administration|\bgsa\b|department of (justice|state|defense|treasury)|federal bureau/i;
+
 function isPageView(request: Request, url: URL): boolean {
   if (request.method !== "GET") return false;
   const p = url.pathname;
@@ -30,7 +32,25 @@ function isPageView(request: Request, url: URL): boolean {
   return accept.includes("text/html");
 }
 
-export function maybeAlertOutOfArea(request: Request): void {
+async function lookupOrg(ip: string): Promise<string> {
+  try {
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 4000);
+    const res = await fetch(
+      `http://ip-api.com/json/${encodeURIComponent(ip)}?fields=status,org,isp,as`,
+      { signal: ctrl.signal }
+    );
+    clearTimeout(t);
+    if (!res.ok) return "";
+    const data = (await res.json()) as { status?: string; org?: string; isp?: string; as?: string };
+    if (data.status !== "success") return "";
+    return [data.org, data.isp, data.as].filter(Boolean).join(" | ");
+  } catch {
+    return "";
+  }
+}
+
+export function maybeAlertGovVisitor(request: Request): void {
   try {
     const url = new URL(request.url);
     if (!isPageView(request, url)) return;
@@ -42,38 +62,43 @@ export function maybeAlertOutOfArea(request: Request): void {
     if (request.headers.get(SKIP_HEADER) === "1") return;
     const fwd = request.headers.get("x-forwarded-for") ?? "";
     const clientIp = fwd.split(",")[0].trim() || request.headers.get("x-real-ip") || "";
-    if (clientIp && SKIP_IPS.has(clientIp)) return;
+    if (!clientIp || SKIP_IPS.has(clientIp)) return;
 
-    const country = request.headers.get("x-vercel-ip-country") ?? "";
-    const region = request.headers.get("x-vercel-ip-country-region") ?? "";
-    const city = request.headers.get("x-vercel-ip-city") ?? "";
-    if (!country) return; // not on Vercel / no geo data — nothing to check
+    // Async + fire-and-forget: never slow down or break the page render.
+    void (async () => {
+      try {
+        const org = await lookupOrg(clientIp);
+        if (!org || !GOV_RE.test(org)) return; // not a government network — stay silent
 
-    if (country === "US" && HOME_STATES.has(region)) return; // home turf
+        const when = new Date().toISOString();
+        const country = request.headers.get("x-vercel-ip-country") ?? "";
+        const region = request.headers.get("x-vercel-ip-country-region") ?? "";
+        const city = request.headers.get("x-vercel-ip-city") ?? "";
+        const where = [city, region, country].filter(Boolean).join(", ");
+        const subject = `Government visitor on kekerainc.com: ${org.split(" | ")[0]}`;
+        const text =
+          `Someone from a US government network just visited the Kekera site.\n\n` +
+          `When: ${when}\n` +
+          `Page: ${url.pathname}\n` +
+          `Network: ${org}\n` +
+          `Location: ${where || "unknown"}\n` +
+          `IP: ${clientIp}\n` +
+          `Browser: ${ua.slice(0, 160)}\n`;
 
-    const when = new Date().toISOString();
-    const where = [city, region, country].filter(Boolean).join(", ");
-    const subject = `Out-of-area visitor: ${where || "unknown location"} on kekerainc.com`;
-    const text =
-      `Someone outside PA/NJ just visited the Kekera site.\n\n` +
-      `When: ${when}\n` +
-      `Page: ${url.pathname}\n` +
-      `Location: ${where || "unknown"}\n` +
-      `IP: ${clientIp || "unknown"}\n` +
-      `Browser: ${ua.slice(0, 160)}\n`;
-
-    const apiKey = process.env["RESEND_API_KEY"];
-    if (!apiKey) {
-      console.warn("[tripwire] no RESEND_API_KEY — out-of-area visit not alerted:", where, url.pathname);
-      return;
-    }
-
-    // Fire-and-forget: never slow down or break the page render.
-    fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ from: ALERT_FROM, to: ALERT_TO, subject, text }),
-    }).catch((e) => console.warn("[tripwire] alert send failed:", e));
+        const apiKey = process.env["RESEND_API_KEY"];
+        if (!apiKey) {
+          console.warn("[tripwire] no RESEND_API_KEY — gov visit not alerted:", org, url.pathname);
+          return;
+        }
+        await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+          body: JSON.stringify({ from: ALERT_FROM, to: ALERT_TO, subject, text }),
+        });
+      } catch (e) {
+        console.warn("[tripwire] gov check failed:", e);
+      }
+    })();
   } catch (e) {
     console.warn("[tripwire] check failed:", e);
   }
