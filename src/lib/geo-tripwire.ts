@@ -61,7 +61,7 @@ export function maybeAlertGovVisitor(request: Request): void {
     // Skip my own test traffic: explicit header or known infra IP.
     if (request.headers.get(SKIP_HEADER) === "1") return;
     const fwd = request.headers.get("x-forwarded-for") ?? "";
-    const clientIp = fwd.split(",")[0].trim() || request.headers.get("x-real-ip") || "";
+    const clientIp = (fwd.split(",")[0] ?? "").trim() || request.headers.get("x-real-ip") || "";
     if (!clientIp || SKIP_IPS.has(clientIp)) return;
 
     // Async + fire-and-forget: never slow down or break the page render.
